@@ -6,6 +6,18 @@ from urllib.request import urlopen
 import xml.dom.minidom
 import os
 from django.http import HttpResponse
+from django.http import HttpRequest
+from datetime import datetime
+
+def home(request):
+    assert isinstance(request, HttpRequest)
+    tparams = {
+        'title': 'Home Page',
+        'year': datetime.now().year,
+    }
+    return render(request, 'index.html', tparams)
+
+
 
 session = BaseXClient.Session('localhost', 1984, 'admin', 'admin')
 session.execute("create db musicbox")
@@ -37,6 +49,7 @@ def top_tracks(request):
 
 def login(request):
     return render(request)
+
 
 
 
