@@ -20,4 +20,5 @@ import musicbox.views
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^toptracks/', musicbox.views.top_tracks, name='top'),
+    url(r'^login/', musicbox.views.login, name='login'),
 ]
