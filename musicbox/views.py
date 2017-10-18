@@ -24,6 +24,7 @@ def users(request):
     doc = xml.dom.minidom.parse("Users.xml")
     content = doc.toxml()
 
+    session.open("open musicbox")
     session.add("users.xml", content)
     session.query("""find """)
     query = session.query("""for $b in collection("musicbox/users")//user return $b/email""")
