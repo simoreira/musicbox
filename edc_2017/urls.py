@@ -22,4 +22,6 @@ urlpatterns = [
     url(r'^$', musicbox.views.home, name='home'),
     url(r'^toptracks/', musicbox.views.top_tracks, name='top'),
     url(r'^login/', musicbox.views.login, name='login'),
+    url(r'^music/', musicbox.views.music, name='music'),
+    url(r'^artist/songs/$', musicbox.views.allsongs, name='allsongs'),
 ]

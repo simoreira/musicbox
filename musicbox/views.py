@@ -12,8 +12,7 @@ from datetime import datetime
 def home(request):
     assert isinstance(request, HttpRequest)
     tparams = {
-        'title': 'Home Page',
-        'year': datetime.now().year,
+        'title': 'MusicBox',
     }
     return render(request, 'index.html', tparams)
 
@@ -51,5 +50,17 @@ def login(request):
     return render(request)
 
 
+def music(request):
+    assert isinstance(request, HttpRequest)
+    b = {
+        'music': 'oi',
+    }
+    return render(request, 'music.html', b)
 
+def allsongs(request):
+    assert isinstance(request, HttpRequest)
+    b = {
+        'music': 'oi',
+    }
+    return render(request, 'allsongs.html', b)
 

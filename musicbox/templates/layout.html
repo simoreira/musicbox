@@ -1,20 +1,21 @@
-﻿<!DOCTYPE html>
+﻿{% load static %}<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ title }} - MusicBox</title>
-    {% load staticfiles %}
-    <link rel="stylesheet" type="text/css" href="{% static 'content/bootstrap.min.css' %}" />
-    <link rel="stylesheet" type="text/css" href="{% static 'content/site.css' %}" />
-    <script src="{% static 'scripts/modernizr-2.6.2.js' %}"></script>
+    <title>{{ title }}</title>
+    {% block stylesheets %}
+    {% include 'lib/_styles.html' %}
+    {% endblock %}
+
+
 </head>
 
 <body>
     <div class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container">
+        <div class="container-fluid">
             <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
@@ -22,9 +23,9 @@
                 <a href="/" class="navbar-brand">MusicBox</a>
             </div>
             <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li><a href="{% url 'home' %}">Login</a></li>
-
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="{% url 'music' %}"><span class="glyphicon glyphicon-music"></span>&nbsp; Music</a></li>
+                    <li><a href="{% url 'login' %}"><span class="glyphicon glyphicon-log-in" ></span>&nbsp; Log in</a></li>
                 </ul>
 
             </div>
@@ -32,17 +33,24 @@
     </div>
 
     <div class="container body-content">
-{% block content %}{% endblock %}
+
+        {% block content %}
+        {% endblock %}
         <hr/>
         <footer>
-            <p>&copy; {{ year }} - MusicBox</p>
+            <p>&copy; 2017 - MusicBox</p>
         </footer>
     </div>
 
-    <script src="{% static 'scripts/jquery-1.10.2.js' %}"></script>
-    <script src="{% static 'scripts/bootstrap.js' %}"></script>
-    <script src="{% static 'scripts/respond.js' %}"></script>
-{% block scripts %}{% endblock %}
 
+
+
+{% block javascript %}
+{% include 'lib/_scripts.html' %}
+{% endblock %}
+
+{% block jspage %}
+{% endblock %}
 </body>
+
 </html>
