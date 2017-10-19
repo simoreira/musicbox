@@ -71,4 +71,6 @@ def albums(request):
 def charts(request):
     return render(request, 'charts.html')
 
+def albuminfo(request):
+    return render(request, 'albuminfo.html')
 

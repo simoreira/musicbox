@@ -2,14 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="02b8e651-2158-4160-b3ef-516440001875" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/musicbox/templates/allalbuns.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/musicbox/templates/allsongs.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/musicbox/templates/music.html" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/edc_2017/urls.py" afterPath="$PROJECT_DIR$/edc_2017/urls.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/musicbox/static/content/oi.css" afterPath="$PROJECT_DIR$/musicbox/static/content/oi.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/musicbox/templates/index.html" afterPath="$PROJECT_DIR$/musicbox/templates/index.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/musicbox/templates/layout.html" afterPath="$PROJECT_DIR$/musicbox/templates/layout.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/musicbox/templates/library/_styles.html" afterPath="$PROJECT_DIR$/musicbox/templates/library/_styles.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/musicbox/views.py" afterPath="$PROJECT_DIR$/musicbox/views.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -22,13 +17,16 @@
   <component name="CoverageDataManager">
     <SUITE FILE_PATH="coverage/edc_2017$Test__musicbox_templates_music_html.coverage" NAME="Test: musicbox.templates.music.html Coverage Results" MODIFIED="1508354868527" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
   </component>
+  <component name="DjangoConsoleOptions" custom-start-script="import sys; print('Python %s on %s' % (sys.version, sys.platform))&#10;import django; print('Django %s' % django.get_version())&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;if 'setup' in dir(django): django.setup()&#10;import django_manage_shell; django_manage_shell.run(PROJECT_ROOT)">
+    <option name="myCustomStartScript" value="import sys; print('Python %s on %s' % (sys.version, sys.platform))&#10;import django; print('Django %s' % django.get_version())&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;if 'setup' in dir(django): django.setup()&#10;import django_manage_shell; django_manage_shell.run(PROJECT_ROOT)" />
+  </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="450">
       <file leaf-file-name="urls.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/edc_2017/urls.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="444">
-              <caret line="26" column="60" lean-forward="false" selection-start-line="26" selection-start-column="60" selection-end-line="26" selection-end-column="60" />
+            <state relative-caret-position="450">
+              <caret line="27" column="67" lean-forward="false" selection-start-line="27" selection-start-column="67" selection-end-line="27" selection-end-column="67" />
               <folding>
                 <element signature="e#642#674#0" expanded="true" />
               </folding>
@@ -36,23 +34,19 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="music.html" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/musicbox/templates/music.html">
+      <file leaf-file-name="albuminfo.html" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/musicbox/templates/albuminfo.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="360">
-              <caret line="20" column="51" lean-forward="true" selection-start-line="20" selection-start-column="51" selection-end-line="20" selection-end-column="51" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="views.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/musicbox/views.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1134">
-              <caret line="72" column="0" lean-forward="true" selection-start-line="72" selection-start-column="0" selection-end-line="72" selection-end-column="0" />
+            <state relative-caret-position="143">
+              <caret line="19" column="17" lean-forward="true" selection-start-line="19" selection-start-column="17" selection-end-line="19" selection-end-column="17" />
               <folding>
-                <element signature="e#0#35#0" expanded="true" />
+                <element signature="e#93#137#0#HTML" expanded="true" />
+                <element signature="e#280#326#0#HTML" expanded="true" />
+                <element signature="e#340#385#0#HTML" expanded="true" />
+                <element signature="e#428#434#0#HTML" expanded="true" />
+                <element signature="e#1060#1084#0#HTML" expanded="true" />
+                <element signature="e#1183#1207#0#HTML" expanded="true" />
+                <element signature="e#1221#1267#0#HTML" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -61,19 +55,16 @@
       <file leaf-file-name="index.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/musicbox/templates/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="972">
-              <caret line="54" column="23" lean-forward="false" selection-start-line="54" selection-start-column="23" selection-end-line="54" selection-end-column="23" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="charts.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/musicbox/templates/charts.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="270">
-              <caret line="15" column="66" lean-forward="false" selection-start-line="15" selection-start-column="66" selection-end-line="15" selection-end-column="66" />
-              <folding />
+            <state relative-caret-position="161">
+              <caret line="61" column="12" lean-forward="false" selection-start-line="61" selection-start-column="12" selection-end-line="65" selection-end-column="18" />
+              <folding>
+                <element signature="e#1486#1632#0#HTML" expanded="false" />
+                <element signature="e#1645#1792#0#HTML" expanded="false" />
+                <element signature="e#1966#2011#0#HTML" expanded="true" />
+                <element signature="n#block#1;n#!!top" expanded="false" />
+                <element signature="e#2588#2709#0#HTML" expanded="false" />
+                <element signature="e#2629#2693#0#HTML" expanded="false" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -82,29 +73,19 @@
         <entry file="file://$PROJECT_DIR$/musicbox/templates/artists.html">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="90">
-              <caret line="5" column="85" lean-forward="true" selection-start-line="5" selection-start-column="4" selection-end-line="5" selection-end-column="85" />
+              <caret line="5" column="85" lean-forward="false" selection-start-line="5" selection-start-column="4" selection-end-line="5" selection-end-column="85" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="_scripts.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/musicbox/templates/library/_scripts.html">
+      <file leaf-file-name="views.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/musicbox/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="layout.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/musicbox/templates/layout.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="291">
-              <caret line="52" column="10" lean-forward="true" selection-start-line="52" selection-start-column="10" selection-end-line="52" selection-end-column="10" />
+            <state relative-caret-position="1170">
+              <caret line="74" column="42" lean-forward="false" selection-start-line="74" selection-start-column="42" selection-end-line="74" selection-end-column="42" />
               <folding>
-                <element signature="n#style#0;n#p#0;n#footer#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="e#0#35#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -135,7 +116,6 @@
         <option value="$PROJECT_DIR$/musicbox/models.py" />
         <option value="$PROJECT_DIR$/musicbox/lib/_styles.html" />
         <option value="$PROJECT_DIR$/musicbox/lib/_scripts.html" />
-        <option value="$PROJECT_DIR$/musicbox/templates/music.html" />
         <option value="$PROJECT_DIR$/musicbox/static/content/oi.css" />
         <option value="$PROJECT_DIR$/musicbox/templates/index.html" />
         <option value="$PROJECT_DIR$/musicbox/templates/library/_styles.html" />
@@ -144,9 +124,11 @@
         <option value="$PROJECT_DIR$/musicbox/templates/allalbuns.html" />
         <option value="$PROJECT_DIR$/musicbox/templates/about.html" />
         <option value="$PROJECT_DIR$/musicbox/templates/charts.html" />
+        <option value="$PROJECT_DIR$/musicbox/templates/layout.html" />
+        <option value="$PROJECT_DIR$/musicbox/templates/music.html" />
         <option value="$PROJECT_DIR$/musicbox/views.py" />
         <option value="$PROJECT_DIR$/edc_2017/urls.py" />
-        <option value="$PROJECT_DIR$/musicbox/templates/layout.html" />
+        <option value="$PROJECT_DIR$/musicbox/templates/albuminfo.html" />
       </list>
     </option>
   </component>
@@ -213,19 +195,12 @@
               <item name="musicbox" type="462c0819:PsiDirectoryNode" />
               <item name="templates" type="462c0819:PsiDirectoryNode" />
             </path>
-            <path>
-              <item name="edc_2017" type="b2602c69:ProjectViewProjectNode" />
-              <item name="edc_2017" type="462c0819:PsiDirectoryNode" />
-              <item name="musicbox" type="462c0819:PsiDirectoryNode" />
-              <item name="templates" type="462c0819:PsiDirectoryNode" />
-              <item name="library" type="462c0819:PsiDirectoryNode" />
-            </path>
           </expand>
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
       <pane id="Scratches" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -316,21 +291,30 @@
       <configuration name="Test: musicbox.templates.music.html" configurationId="DjangoTestsConfigurationType" />
     </history-entry>
   </component>
+  <component name="TodoView">
+    <todo-panel id="selected-file">
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+    <todo-panel id="all">
+      <are-packages-shown value="true" />
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+  </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="-4" width="1368" height="780" extended-state="6" />
+    <frame x="0" y="-4" width="1366" height="772" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.10378788" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.16287878" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32970452" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3003003" sideWeight="0.50390625" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.30015552" sideWeight="0.49609375" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.30015552" sideWeight="0.49609375" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32970452" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32970452" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32970452" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Data View" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -375,13 +359,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/musicbox/templates/logIn.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/BaseXClient.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="4572">
@@ -615,7 +592,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -642,22 +618,6 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/musicbox/templates/allalbuns.html" />
     <entry file="file://$PROJECT_DIR$/musicbox/templates/about.html" />
-    <entry file="file://$PROJECT_DIR$/musicbox/templates/index.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="972">
-          <caret line="54" column="23" lean-forward="false" selection-start-line="54" selection-start-column="23" selection-end-line="54" selection-end-column="23" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/musicbox/templates/artists.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="90">
-          <caret line="5" column="85" lean-forward="true" selection-start-line="5" selection-start-column="4" selection-end-line="5" selection-end-column="85" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/musicbox/templates/charts.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="270">
@@ -666,41 +626,12 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/musicbox/views.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1134">
-          <caret line="72" column="0" lean-forward="true" selection-start-line="72" selection-start-column="0" selection-end-line="72" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#35#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/musicbox/templates/allsongs.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/musicbox/templates/allsongs.html" />
     <entry file="file://$PROJECT_DIR$/musicbox/templates/layout.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="291">
-          <caret line="52" column="10" lean-forward="true" selection-start-line="52" selection-start-column="10" selection-end-line="52" selection-end-column="10" />
-          <folding>
-            <element signature="n#style#0;n#p#0;n#footer#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/edc_2017/urls.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="444">
-          <caret line="26" column="60" lean-forward="false" selection-start-line="26" selection-start-column="60" selection-end-line="26" selection-end-column="60" />
-          <folding>
-            <element signature="e#642#674#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="936">
+          <caret line="52" column="0" lean-forward="false" selection-start-line="52" selection-start-column="0" selection-end-line="52" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -708,15 +639,66 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="540">
           <caret line="30" column="6" lean-forward="false" selection-start-line="30" selection-start-column="6" selection-end-line="30" selection-end-column="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/musicbox/templates/music.html" />
+    <entry file="file://$PROJECT_DIR$/musicbox/views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1170">
+          <caret line="74" column="42" lean-forward="false" selection-start-line="74" selection-start-column="42" selection-end-line="74" selection-end-column="42" />
+          <folding>
+            <element signature="e#0#35#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/edc_2017/urls.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="450">
+          <caret line="27" column="67" lean-forward="false" selection-start-line="27" selection-start-column="67" selection-end-line="27" selection-end-column="67" />
+          <folding>
+            <element signature="e#642#674#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/musicbox/templates/artists.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="5" column="85" lean-forward="false" selection-start-line="5" selection-start-column="4" selection-end-line="5" selection-end-column="85" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/musicbox/templates/music.html">
+    <entry file="file://$PROJECT_DIR$/musicbox/templates/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="360">
-          <caret line="20" column="51" lean-forward="true" selection-start-line="20" selection-start-column="51" selection-end-line="20" selection-end-column="51" />
-          <folding />
+        <state relative-caret-position="161">
+          <caret line="61" column="12" lean-forward="false" selection-start-line="61" selection-start-column="12" selection-end-line="65" selection-end-column="18" />
+          <folding>
+            <element signature="e#1486#1632#0#HTML" expanded="false" />
+            <element signature="e#1645#1792#0#HTML" expanded="false" />
+            <element signature="e#1966#2011#0#HTML" expanded="true" />
+            <element signature="n#block#1;n#!!top" expanded="false" />
+            <element signature="e#2588#2709#0#HTML" expanded="false" />
+            <element signature="e#2629#2693#0#HTML" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/musicbox/templates/albuminfo.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="143">
+          <caret line="19" column="17" lean-forward="true" selection-start-line="19" selection-start-column="17" selection-end-line="19" selection-end-column="17" />
+          <folding>
+            <element signature="e#93#137#0#HTML" expanded="true" />
+            <element signature="e#280#326#0#HTML" expanded="true" />
+            <element signature="e#340#385#0#HTML" expanded="true" />
+            <element signature="e#428#434#0#HTML" expanded="true" />
+            <element signature="e#1060#1084#0#HTML" expanded="true" />
+            <element signature="e#1183#1207#0#HTML" expanded="true" />
+            <element signature="e#1221#1267#0#HTML" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
