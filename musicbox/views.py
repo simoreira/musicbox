@@ -9,8 +9,6 @@ from django.http import HttpResponse
 from django.http import HttpRequest
 from datetime import datetime
 
-session = BaseXClient.Session('localhost', 1984, 'admin', 'admin')
-
 def home(request):
     assert isinstance(request, HttpRequest)
     tparams = {
@@ -20,43 +18,26 @@ def home(request):
 
 # Create your views here.
 
-def users(request):
-    doc = xml.dom.minidom.parse("Users.xml")
-    content = doc.toxml()
-
-    session.open("open musicbox")
-    session.add("users.xml", content)
-    session.query("""find """)
-    query = session.query("""for $b in collection("musicbox/users")//user return $b/email""")
-    list=[]
-    for email in query.iter():
-        list += email
-
-    return HttpResponse(list)
+session = BaseXClient.Session('localhost', 1984, 'admin', 'admin')
+session.execute("create db musicbox")
+doc = xml.dom.minidom.parse("artists.xml")
+content = doc.toxml()
+session.add("musicbox/artists.xml", content)
 
 def top_tracks(request):
+
     session.execute("open musicbox")
-    url = "http://ws.audioscrobbler.com/2.0/?method=chart.gettoptracks&api_key=79004d202567282ea27ce27e9c26a498"
-    s = urlopen(url)
-    contents = s.read()
-    file = open("toptracks.xml", 'wb')
-    file.write(contents)
-    file.close()
 
-    doc = xml.dom.minidom.parse("toptracks.xml")
-    content = doc.toxml()
+    #query = session.query("""for $b in collection('musicbox/artists.xml')//artists/artist
+     #                        order by xs:integer($b/playcount) descending
+      #                       return <result>{$b/name} {$b/playcount}</result>""")
+    #list = []
+    #for name in query.iter():
+     #   list += name[1] + "<br>"
 
-    session.add("toptracks.xml", content)
-
-    os.remove("toptracks.xml")
-
-    query = session.query("""for $b in collection("musicbox/toptracks")//track return $b/name""")
-    list = []
-    for name in query.iter():
-        list += name[1] + "<br>"
-
-    return HttpResponse(list)
-
+#    return HttpResponse(list)
+ #   """
+    pass
 
 def login(request):
     return render(request)
