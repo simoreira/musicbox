@@ -20,14 +20,23 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a href="/" class="navbar-brand">MusicBox</a>
+                <a href="/" class="navbar-brand" style="font-weight: bold; font-size: 200%";>MusicBox</a>
             </div>
             <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav navbar-right">
-                    <li><a href="{% url 'music' %}"><span class="glyphicon glyphicon-music"></span>&nbsp; Music</a></li>
-                    <li><a href="{% url 'login' %}"><span class="glyphicon glyphicon-log-in" ></span>&nbsp; Log in</a></li>
+                <ul class="nav navbar-nav navbar-right" >
+                        <li>
+                            <a href="{% url 'artists' %}"><span class="glyphicon glyphicon glyphicon-user"></span>&nbsp;Artists</a>
+                        </li>
+                        <li><a href="{% url 'albums' %}"><span class="glyphicon glyphicon-book"></span>&nbsp; Albums</a></li>
+                        <li><a href="{% url 'charts' %}"><span class="glyphicon glyphicon-star"></span>&nbsp; Charts</a></li>
+                        <li><a href="{% url 'login' %}"><span class="glyphicon glyphicon-log-in" ></span>&nbsp; Log in</a></li>
                 </ul>
-
+                <form class="navbar-form navbar-left" role="search">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Search">
+                    </div>
+                    <button type="submit" class="btn btn-default">Search</button>
+                </form>
             </div>
         </div>
     </div>
@@ -38,7 +47,8 @@
         {% endblock %}
         <hr/>
         <footer>
-            <p>&copy; 2017 - MusicBox</p>
+            <p style="font-size: 10px;">&copy; 2017 - MusicBox &emsp;| &emsp; Engenharia de Dados e Conhecimento &emsp;| &emsp; Ana Cruz(76351), Inês Lemos(76769), Inês Moreira(76471)</p>
+            <p></p>
         </footer>
     </div>
 

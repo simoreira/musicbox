@@ -62,17 +62,13 @@ def login(request):
     return render(request)
 
 
-def music(request):
-    assert isinstance(request, HttpRequest)
-    b = {
-        'music': 'oi',
-    }
-    return render(request, 'music.html', b)
+def artists(request):
+    return render(request, 'artists.html')
 
-def allsongs(request):
-    assert isinstance(request, HttpRequest)
-    b = {
-        'music': 'oi',
-    }
-    return render(request, 'allsongs.html', b)
+def albums(request):
+    return render(request, 'albums.html')
+
+def charts(request):
+    return render(request, 'charts.html')
+
 
