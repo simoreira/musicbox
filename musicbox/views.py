@@ -61,7 +61,6 @@ def top_tracks(request):
 def login(request):
     return render(request)
 
-
 def artists(request):
     return render(request, 'artists.html')
 
@@ -73,4 +72,7 @@ def charts(request):
 
 def albuminfo(request):
     return render(request, 'albuminfo.html')
+
+def artist_page(request):
+    return render(request, 'artist_page.html')
 
