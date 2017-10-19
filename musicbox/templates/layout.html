@@ -12,7 +12,7 @@
 </head>
 
 <body>
-    <div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="navbar navbar-inverse navbar-fixed-top" style="background: #9b0002;">
         <div class="container-fluid">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
@@ -24,9 +24,7 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav navbar-right" >
-                        <li>
-                            <a href="{% url 'artists' %}"><span class="glyphicon glyphicon glyphicon-user"></span>&nbsp;Artists</a>
-                        </li>
+                        <li><a href="{% url 'artists' %}"><span class="glyphicon glyphicon glyphicon-user"></span>&nbsp;Artists</a></li>
                         <li><a href="{% url 'albums' %}"><span class="glyphicon glyphicon-book"></span>&nbsp; Albums</a></li>
                         <li><a href="{% url 'charts' %}"><span class="glyphicon glyphicon-star"></span>&nbsp; Charts</a></li>
                         <li><a href="{% url 'login' %}"><span class="glyphicon glyphicon-log-in" ></span>&nbsp; Log in</a></li>

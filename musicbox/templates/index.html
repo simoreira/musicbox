@@ -14,26 +14,24 @@
                     <li data-target="#hero-carousel" data-slide-to="2"></li>
                     <li data-target="#hero-carousel" data-slide-to="3"></li>
                     <li data-target="#hero-carousel" data-slide-to="4"></li>
-                    <li data-target="#hero-carousel" data-slide-to="5"></li>
                 </ol>
             <div class="carousel-inner">
+                {%  load static %}
                 <div class="item active">
-                    <img src=" http://fillmurray.com/1200/500">
+
+                    <img src="{% static 'img/coldplay.jpg' %}">
                 </div>
                 <div class="item">
-                    <img src="http://www.placecage.com/1170/500">
+                    <img src="{% static 'img/eminem.jpg' %}">
                 </div>
                 <div class="item">
-                    <img src=" http://fillmurray.com/1100/400">
+                    <img src="{% static 'img/queen.jpg' %}">
                 </div>
                 <div class="item">
-                    <img src="http://www.placecage.com/1170/600">
+                    <img src="{% static 'img/rs-beatles-70b3b040-a02b-4323-8247-69dbbdd6af10.jpg' %}">
                 </div>
                 <div class="item">
-                    <img src=" http://fillmurray.com/1190/650">
-                </div>
-                <div class="item">
-                    <img src="http://www.placecage.com/1200/550">
+                    <img src="{% static 'img/lana2.jpg' %}">
                 </div>
             </div>
             <a class="left carousel-control" href="#hero-carousel" data-slide="prev">
