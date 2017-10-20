@@ -9,6 +9,39 @@ from django.http import HttpResponse
 from django.http import HttpRequest
 from datetime import datetime
 
+session = BaseXClient.Session('localhost', 1984, 'admin', 'admin')
+
+#create database
+session.execute("create db musicbox")
+#seed database
+doc = xml.dom.minidom.parse("artists.xml")
+content = doc.toxml()
+session.add("artists.xml", content)
+
+#add xml with top current tracks
+url = "http://ws.audioscrobbler.com/2.0/?method=chart.gettoptracks&api_key=79004d202567282ea27ce27e9c26a498"
+s = urlopen(url)
+contents = s.read()
+file = open("toptracks.xml", 'wb')
+file.write(contents)
+file.close()
+doc = xml.dom.minidom.parse("toptracks.xml")
+content = doc.toxml()
+session.add("toptracks.xml", content)
+os.remove("toptracks.xml")
+
+#add xml with top portugal tracks
+url = "http://ws.audioscrobbler.com/2.0/?method=geo.gettopartists&country=portugal&api_key=79004d202567282ea27ce27e9c26a498"
+s = urlopen(url)
+contents = s.read()
+file = open("toptracks_portugal.xml", 'wb')
+file.write(contents)
+file.close()
+doc = xml.dom.minidom.parse("toptracks_portugal.xml")
+content = doc.toxml()
+session.add("toptracks_portugal.xml", content)
+os.remove("toptracks_portugal.xml")
+
 def home(request):
     assert isinstance(request, HttpRequest)
     tparams = {
@@ -18,14 +51,7 @@ def home(request):
 
 # Create your views here.
 
-session = BaseXClient.Session('localhost', 1984, 'admin', 'admin')
-session.execute("create db musicbox")
-doc = xml.dom.minidom.parse("artists.xml")
-content = doc.toxml()
-session.add("artists.xml", content)
-
 def top_tracks(request):
-
     session.execute("open musicbox")
 
     query = session.query("""for $b in collection('musicbox/artists.xml')//artists/artist
