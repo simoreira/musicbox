@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, render_to_response
 import BaseXClient
 import urllib
 import urllib.request
@@ -52,6 +52,8 @@ def home(request):
 # Create your views here.
 
 def top_tracks(request):
+
+    print(request)
     session.execute("open musicbox")
 
     query = session.query("""for $b in collection('musicbox/artists.xml')//artists/artist
@@ -59,9 +61,10 @@ def top_tracks(request):
                              return <result>{$b/name} {$b/listeners}</result>""")
     list = []
     for name in query.iter():
-        list += name[1] + "<br>"
+        list.append(name[1])
+        
 
-    return HttpResponse(list)
+    return render(request,'index.html', {'list':list})
 
 def login(request):
     return render(request)
