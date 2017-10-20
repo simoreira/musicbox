@@ -8,6 +8,9 @@ import os
 from django.http import HttpResponse
 from django.http import HttpRequest
 from datetime import datetime
+import xml.etree.cElementTree as lic
+from django.contrib.auth.models import User
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 session = BaseXClient.Session('localhost', 1984, 'admin', 'admin')
 
@@ -48,19 +51,36 @@ def home(request):
 # Create your views here.
 
 def top_tracks(request):
-
-    print(request)
     session.execute("open musicbox")
-
+    """
+    for $b in collection('musicbox/artists.xml')//artists/artist
+                             order by xs:integer($b/listeners) descending
+                             return ($b/name/text(),$b/listeners/text())
+    """
     query = session.query("""for $b in collection('musicbox/artists.xml')//artists/artist
                              order by xs:integer($b/listeners) descending
-                             return <result>{$b/name} {$b/listeners}</result>""")
-    list = []
-    for name in query.iter():
-        list.append(name[1])
-        
+                             return concat(xs:string($b/name/text()),':',xs:string($b/listeners/text()))""")
 
-    return render(request,'index.html', {'list':list})
+    list = []
+    tmp = dict()
+    for name in query.iter():
+        tmp['Name'] = name[1].split(':')[0]
+        tmp['Number'] = name[1].split(':')[1]
+        list.append(tmp)
+        tmp = dict()
+
+
+    page = request.GET.get('page', 1)
+
+    paginator = Paginator(list, 10)
+    try:
+        artists = paginator.page(page)
+    except PageNotAnInteger:
+        artists = paginator.page(1)
+    except EmptyPage:
+        artists = paginator.page(paginator.num_pages)
+
+    return render(request,'index.html', {'artists':artists})
 
 def login(request):
     return render(request)
