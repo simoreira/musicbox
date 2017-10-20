@@ -19,7 +19,7 @@ import musicbox.views
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^$', musicbox.views.home, name='home'),
+    url(r'^$', musicbox.views.top_tracks, name='home'),
     url(r'^toptracks/', musicbox.views.top_tracks, name='top'),
     url(r'^login/', musicbox.views.login, name='login'),
     url(r'^artists/$', musicbox.views.artists, name='artists'),

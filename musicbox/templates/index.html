@@ -52,7 +52,9 @@
         <div class="w3-container w3-grey">
             <h3 style="text-align: center; font-weight: bold";>Top Artists</h3>
             <ul>
-                <li>wecknyew</li>
+                {% for oi in list %}
+                <li> {{ oi }}</li>
+                {% endfor %}
             </ul>
         </div>
     </div>
