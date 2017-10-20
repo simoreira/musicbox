@@ -22,22 +22,20 @@ session = BaseXClient.Session('localhost', 1984, 'admin', 'admin')
 session.execute("create db musicbox")
 doc = xml.dom.minidom.parse("artists.xml")
 content = doc.toxml()
-session.add("musicbox/artists.xml", content)
+session.add("artists.xml", content)
 
 def top_tracks(request):
 
     session.execute("open musicbox")
 
-    #query = session.query("""for $b in collection('musicbox/artists.xml')//artists/artist
-     #                        order by xs:integer($b/playcount) descending
-      #                       return <result>{$b/name} {$b/playcount}</result>""")
-    #list = []
-    #for name in query.iter():
-     #   list += name[1] + "<br>"
+    query = session.query("""for $b in collection('musicbox/artists.xml')//artists/artist
+                             order by xs:integer($b/listeners) descending
+                             return <result>{$b/name} {$b/listeners}</result>""")
+    list = []
+    for name in query.iter():
+        list += name[1] + "<br>"
 
-#    return HttpResponse(list)
- #   """
-    pass
+    return HttpResponse(list)
 
 def login(request):
     return render(request)
@@ -56,4 +54,3 @@ def albuminfo(request):
 
 def artist_page(request):
     return render(request, 'artist_page.html')
-
