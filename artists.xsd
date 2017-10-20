@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="lfm" type="lfmType"/>
+  <xs:complexType name="trackType">
+    <xs:sequence>
+      <xs:element type="xs:string" name="name"/>
+      <xs:element type="xs:string" name="url"/>
+      <xs:element type="xs:string" name="duration"/>
+      <xs:element type="streamableType" name="streamable"/>
+      <xs:element type="artistType" name="artist"/>
+    </xs:sequence>
+    <xs:attribute type="xs:string" name="rank" use="optional"/>
+  </xs:complexType>
+  <xs:complexType name="aType">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute type="xs:string" name="href" use="optional"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="summaryType" mixed="true">
+    <xs:sequence>
+      <xs:element type="aType" name="a" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="linksType">
+    <xs:sequence>
+      <xs:element type="linkType" name="link"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="artistType">
+    <xs:sequence>
+      <xs:element type="xs:string" name="name" minOccurs="0"/>
+      <xs:element type="xs:string" name="playcount" minOccurs="0"/>
+      <xs:element type="xs:string" name="listeners" minOccurs="0"/>
+      <xs:element type="xs:string" name="mbid" minOccurs="0"/>
+      <xs:element type="xs:string" name="url" minOccurs="0"/>
+      <xs:element type="xs:string" name="streamable" minOccurs="0"/>
+      <xs:element type="imageType" name="image" maxOccurs="unbounded" minOccurs="0"/>
+      <xs:element type="albumType" name="album" maxOccurs="unbounded" minOccurs="0"/>
+      <xs:element type="similarType" name="similar" minOccurs="0"/>
+      <xs:element type="bioType" name="bio" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="wikiType">
+    <xs:sequence>
+      <xs:element type="xs:string" name="published"/>
+      <xs:element name="summary">
+        <xs:complexType mixed="true">
+          <xs:sequence>
+            <xs:element type="aType" name="a" minOccurs="0"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="content">
+        <xs:complexType mixed="true">
+          <xs:sequence>
+            <xs:element type="aType" name="a" minOccurs="0"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="similarType">
+    <xs:sequence>
+      <xs:element type="artistType" name="artist" maxOccurs="unbounded" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="tracksType">
+    <xs:sequence>
+      <xs:element type="trackType" name="track" maxOccurs="unbounded" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="streamableType">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute type="xs:string" name="fulltrack" use="optional"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="bioType">
+    <xs:sequence>
+      <xs:element type="linksType" name="links" minOccurs="0"/>
+      <xs:element type="xs:string" name="published" minOccurs="0"/>
+      <xs:element type="xs:string" name="summary" minOccurs="0"/>
+      <xs:element type="xs:string" name="content" minOccurs="0"/>
+      <xs:element type="xs:string" name="name" minOccurs="0"/>
+      <xs:element type="xs:string" name="playcount" minOccurs="0"/>
+      <xs:element type="xs:string" name="listeners" minOccurs="0"/>
+      <xs:element type="xs:string" name="mbid" minOccurs="0"/>
+      <xs:element type="xs:string" name="url" minOccurs="0"/>
+      <xs:element type="xs:string" name="streamable" minOccurs="0"/>
+      <xs:element type="imageType" name="image" maxOccurs="unbounded" minOccurs="0"/>
+      <xs:element type="albumType" name="album" maxOccurs="unbounded" minOccurs="0"/>
+      <xs:element type="similarType" name="similar" minOccurs="0"/>
+      <xs:element type="bioType" name="bio" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="artistsType">
+    <xs:choice maxOccurs="unbounded" minOccurs="0">
+      <xs:element type="artistType" name="artist" maxOccurs="unbounded" minOccurs="0"/>
+      <xs:element type="albumType" name="album" maxOccurs="unbounded" minOccurs="0"/>
+      <xs:element type="similarType" name="similar"/>
+      <xs:element type="bioType" name="bio"/>
+    </xs:choice>
+  </xs:complexType>
+  <xs:complexType name="tagsType">
+    <xs:sequence>
+      <xs:element type="tagType" name="tag" maxOccurs="unbounded" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="albumType">
+    <xs:sequence>
+      <xs:element type="xs:string" name="name"/>
+      <xs:element type="xs:string" name="artist"/>
+      <xs:element type="xs:string" name="mbid" minOccurs="0"/>
+      <xs:element type="xs:string" name="url"/>
+      <xs:element type="imageType" name="image" maxOccurs="unbounded" minOccurs="0"/>
+      <xs:element type="xs:string" name="listeners"/>
+      <xs:element type="xs:string" name="playcount"/>
+      <xs:element type="tracksType" name="tracks"/>
+      <xs:element type="tagsType" name="tags"/>
+      <xs:element type="wikiType" name="wiki"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="tagType">
+    <xs:sequence>
+      <xs:element type="xs:string" name="name"/>
+      <xs:element type="xs:string" name="url"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="linkType">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute type="xs:string" name="rel" use="optional"/>
+        <xs:attribute type="xs:string" name="href" use="optional"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="lfmType">
+    <xs:sequence>
+      <xs:element type="artistsType" name="artists"/>
+    </xs:sequence>
+    <xs:attribute type="xs:string" name="status"/>
+  </xs:complexType>
+  <xs:complexType name="imageType">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute type="xs:string" name="size" use="optional"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="contentType" mixed="true">
+    <xs:sequence>
+      <xs:element type="aType" name="a" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

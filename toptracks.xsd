@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="lfm" type="lfmType"/>
+  <xs:complexType name="streamableType">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute type="xs:string" name="fulltrack" use="optional"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="trackType">
+    <xs:sequence>
+      <xs:element type="xs:string" name="name"/>
+      <xs:element type="xs:string" name="duration"/>
+      <xs:element type="xs:string" name="playcount"/>
+      <xs:element type="xs:string" name="listeners"/>
+      <xs:element type="xs:string" name="mbid"/>
+      <xs:element type="xs:string" name="url"/>
+      <xs:element type="streamableType" name="streamable"/>
+      <xs:element type="artistType" name="artist"/>
+      <xs:element type="imageType" name="image" maxOccurs="unbounded" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="artistType">
+    <xs:sequence>
+      <xs:element type="xs:string" name="name"/>
+      <xs:element type="xs:string" name="mbid"/>
+      <xs:element type="xs:string" name="url"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="lfmType">
+    <xs:sequence>
+      <xs:element type="tracksType" name="tracks"/>
+    </xs:sequence>
+    <xs:attribute type="xs:string" name="status"/>
+  </xs:complexType>
+  <xs:complexType name="tracksType">
+    <xs:sequence>
+      <xs:element type="trackType" name="track" maxOccurs="unbounded" minOccurs="0"/>
+    </xs:sequence>
+    <xs:attribute type="xs:string" name="page"/>
+    <xs:attribute type="xs:string" name="perPage"/>
+    <xs:attribute type="xs:string" name="totalPages"/>
+    <xs:attribute type="xs:string" name="total"/>
+  </xs:complexType>
+  <xs:complexType name="imageType">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute type="xs:string" name="size" use="optional"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+</xs:schema>

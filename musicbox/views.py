@@ -11,6 +11,8 @@ from datetime import datetime
 import xml.etree.cElementTree as lic
 from django.contrib.auth.models import User
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+import xmlschema
+import sys
 
 session = BaseXClient.Session('localhost', 1984, 'admin', 'admin')
 
@@ -23,7 +25,27 @@ def parse_from_api(url, file_name):
     file.close()
     doc = xml.dom.minidom.parse("%s.xml" % file_name)
     content = doc.toxml()
-    session.add("%s.xml" % file_name, content)
+
+    ## CHECK LATER
+    #query = session.query("""let $doc := '%s.xml'
+    #                let $schema := '%s.xsd'
+    #               return
+        #              if (validation:validate($doc, $schema)) then
+            #             "PASS"
+    #                  else (
+    #                    "FAIL"
+           #              validation:validate-report($doc, $schema)
+                   #      """ % (file_name, file_name))
+    #query.execute()
+
+    schema = xmlschema.XMLSchema('%s.xsd' % file_name)
+    if(schema.is_valid('%s.xml' %file_name)):
+        print("%s.xml is a valid XML file." % file_name)
+        session.add("%s.xml" % file_name, content)
+    else:
+        print("%s.xml is an invalid XML file." %file_name)
+        sys.exit()
+
     os.remove("%s.xml" % file_name)
 
 #create database
@@ -31,15 +53,21 @@ session.execute("create db musicbox")
 #seed database
 doc = xml.dom.minidom.parse("artists.xml")
 content = doc.toxml()
-session.add("artists.xml", content)
+schema = xmlschema.XMLSchema('artists.xsd')
 
+if(schema.is_valid('artists.xml')):
+    print("artists.xml is a valid XML file.")
+    session.add("artists.xml", content)
+else:
+    print("artists.xml is an invalid XML file.")
+    sys.exit()
 #add xml with top current tracks
 get_top_tracks_url = "http://ws.audioscrobbler.com/2.0/?method=chart.gettoptracks&api_key=79004d202567282ea27ce27e9c26a498"
 parse_from_api(get_top_tracks_url, "toptracks")
 
 #add xml with top portugal tracks
-get_pt_top_tracks_url = "http://ws.audioscrobbler.com/2.0/?method=geo.gettopartists&country=portugal&api_key=79004d202567282ea27ce27e9c26a498"
-parse_from_api(get_pt_top_tracks_url, "toptracks_portugal")
+get_pt_top_tracks_url = "http://ws.audioscrobbler.com/2.0/?method=geo.gettoptracks&country=portugal&api_key=79004d202567282ea27ce27e9c26a498"
+parse_from_api(get_pt_top_tracks_url, "toptrack_portugal")
 
 def home(request):
     assert isinstance(request, HttpRequest)
