@@ -20,4 +20,10 @@ for $x in collection("musicbox/artists.xml")//artists/artist/album
 where contains($x/name, "Rated R")
 return $x
 :)
+<root> {
+for $x in collection("musicbox/artists.xml")//artists/artist/name,
+    $y in collection("musicbox/artists.xml")//artists/artist/album/name
+where (contains($x, "Radiohead") or contains($y, "Radiohead"))
+return <artist>{$x}</artist>, <album>{$y}</album>
+}</root> 
 

@@ -28,18 +28,6 @@ def parse_from_api(url, file_name):
     doc = xml.dom.minidom.parse("%s.xml" % file_name)
     content = doc.toxml()
 
-    ## CHECK LATER
-    #query = session.query("""let $doc := '%s.xml'
-    #                let $schema := '%s.xsd'
-    #               return
-        #              if (validation:validate($doc, $schema)) then
-            #             "PASS"
-    #                  else (
-    #                    "FAIL"
-           #              validation:validate-report($doc, $schema)
-                   #      """ % (file_name, file_name))
-    #query.execute()
-
     schema = xmlschema.XMLSchema('%s.xsd' % file_name)
     if(schema.is_valid('%s.xml' %file_name)):
         print("%s.xml is a valid XML file." % file_name)
@@ -130,6 +118,48 @@ def home(request):
         top_artist['imagem'] = name[1].split('_$!_')[1]
         list.append(top_artist)
         top_artist = dict()
+
+    search_artist = session.query("""file:write("%s/result.xml",<root> {
+                                         for $x in collection("musicbox/artists.xml")//artists/artist
+                                         where (contains($x/name, "Radiohead"))
+                                         return <artist>{$x/name, $x/image[@size='large']}</artist>}</root>)""" % os.path.dirname(
+        os.path.abspath(__file__)))
+
+    search_album = session.query("""file:write("%s/result2.xml", <root>{
+                                        for $x in collection("musicbox/artists.xml")//artists/artist/album
+                                        where (contains($x/name, "Arcade Fire"))
+                                        return <album>{$x/name, $x/image[@size='large']}</album>}</root>)""" % os.path.dirname(
+        os.path.abspath(__file__)))
+    search_artist.execute()
+    search_album.execute()
+
+    artists_tree = etree.parse('%s/result.xml' % os.path.dirname(os.path.abspath(__file__)))
+    artists_root = artists_tree.getroot()
+    artists_result = dict()
+    artists_list = []
+
+    albums_tree = etree.parse('%s/result2.xml' % os.path.dirname(os.path.abspath(__file__)))
+    albums_root = albums_tree.getroot()
+    albums_result = dict()
+    albums_list = []
+
+    for elem in artists_root.iter('artist'):
+        artists_result['Name'] = elem.find('name').text
+        artists_result['Image'] = elem.find('image').text
+        artists_list.append(artists_result)
+        artists_result = dict()
+
+    for elem in albums_root.iter('album'):
+        albums_result['Name'] = elem.find('name').text
+        albums_result['Image'] = elem.find('image').text
+        albums_list.append(albums_result)
+        albums_result = dict()
+
+    os.remove("%s/result.xml" % os.path.dirname(os.path.abspath(__file__)))
+    os.remove("%s/result2.xml" % os.path.dirname(os.path.abspath(__file__)))
+
+    print(artists_list)
+    print(albums_list)
 
     return render(request, 'index.html', {'artists': list, 'news': news_list})
 
