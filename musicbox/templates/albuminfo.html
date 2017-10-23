@@ -3,14 +3,14 @@
 {% block content %}
 <div class="row">
     <div class="col-md-4" style="margin-top: 40px; text-align: center">
+        <h3 style="text-align: center; font-weight: bold">{{ artist }}</h3>
         <img src="{{ photo }}">
+        <h3 style="text-align: center; font-weight: bold">{{ album_name }}</h3>
     </div>
 
     <div class="col-md-8" style="margin-top: 40px; text-align: justify;">
         <h3 style="text-align: center; font-weight: bold">Wiki</h3>
-            <p>
-                {{ wiki }}
-            </p>
+        <p> {{ wiki }} </p>
 
     </div>
 
@@ -28,6 +28,10 @@
         <h3 style="text-align: justify; font-weight: bold">Tracklist</h3>
 
         <table class="table table-striped">
+            <thead>
+                <th>Track name</th>
+                <th>Duration</th>
+            </thead>
             <tbody>
                 {% for track in tracks %}
                     <tr>

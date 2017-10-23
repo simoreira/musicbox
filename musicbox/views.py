@@ -89,26 +89,17 @@ content = doc.toxml()
 session.add("rss.xml", content)
 os.remove("rss.xml")
 
-def home(request):
-    assert isinstance(request, HttpRequest)
-
 
 def home(request):
     assert isinstance(request, HttpRequest)
-    tparams = {
-        'title': 'MusicBox',
-    }
-    return render(request, 'index.html', tparams)
-
-def rss(request):
     session.execute("open musicbox")
     query = session.query("""declare namespace media = "http://search.yahoo.com/mrss/";
-                             declare namespace content = "http://purl.org/rss/1.0/modules/content/";
-                             file:write("%s/result.xml",
-                             <root>{ 
-                                for $b in collection("musicbox/rss.xml")//item
-                                return <news>{$b/title, $b/link, $b/content:encoded, $b/media:group/media:content[1]}</news>}</root>
-                         )""" % os.path.dirname(os.path.abspath(__file__)))
+                                 declare namespace content = "http://purl.org/rss/1.0/modules/content/";
+                                 file:write("%s/result.xml",
+                                 <root>{ 
+                                    for $b in collection("musicbox/rss.xml")//item
+                                    return <news>{$b/title, $b/link, $b/content:encoded, $b/media:group/media:content[1]}</news>}</root>
+                             )""" % os.path.dirname(os.path.abspath(__file__)))
 
     query.execute()
     tree = etree.parse('%s/result.xml' % os.path.dirname(os.path.abspath(__file__)))
@@ -129,24 +120,17 @@ def rss(request):
     print(news_list)
     os.remove("%s/result.xml" % os.path.dirname(os.path.abspath(__file__)))
 
-    return news_list
-# Create your views here.
-
-def top_artists(request):
-    news_list = rss(request)
-    session.execute("open musicbox")
-
-    query = session.query("""for $b in collection('musicbox/artists.xml')//artists/artist
-                             order by xs:integer($b/listeners) descending
-                             return concat(xs:string($b/name/text()),':',xs:string($b/listeners/text()))""")
+    query2 = session.query("""for $b in collection('musicbox/artists.xml')//artists/artist
+                                     order by xs:integer($b/listeners) descending
+                                     return concat(xs:string($b/name/text()),':',xs:string($b/listeners/text()))""")
 
     list = []
-    tmp = dict()
-    for name in query.iter():
-        tmp['Name'] = name[1].split(':')[0]
-        tmp['Number'] = name[1].split(':')[1]
-        list.append(tmp)
-        tmp = dict()
+    top_artist = dict()
+    for name in query2.iter():
+        top_artist['name'] = name[1].split(':')[0]
+        top_artist['number'] = name[1].split(':')[1]
+        list.append(top_artist)
+        top_artist = dict()
 
     page = request.GET.get('page', 1)
 
@@ -158,7 +142,7 @@ def top_artists(request):
     except EmptyPage:
         artists = paginator.page(paginator.num_pages)
 
-    return render(request,'index.html', {'artists':artists,'news':news_list})
+    return render(request, 'index.html', {'artists': artists, 'news': news_list})
 
 def login(request):
     return render(request)
@@ -168,23 +152,34 @@ def artists(request):
 
 def albums(request):
     assert isinstance(request, HttpRequest)
-    session.execute("open musicbox")
+    list = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U',
+            'V', 'W', 'X', 'Z']
+    lst = dict()
+    flist = []
+    for l in list:
+        lst['ll'] = l[0]
+        flist.append(lst)
+        lst = dict()
 
-    letter = 'L'
-    print(letter)
+    if request.GET.get('name') == None:
+        letter = 'A'
+    else:
+        letter = request.GET.get('name')
+
+    session.execute("open musicbox")
     query = session.query("""for $x in collection("musicbox/artists.xml")//artists/artist/album
-                              where starts-with($x/name, """ + "'" + letter + "')""""
-                              order by $x/name
-                              return $x/name/text()""")
+                                  where starts-with($x/name, """ + "'" + letter + "')""""
+                                  order by $x/name
+                                  return concat(xs:string($x/name/text()), '_$!_', xs:string($x/image[@size='large']/text()))""")
     albums = []
     tmp = dict()
     for album in query.iter():
-        tmp['Name'] = album[1]
+        tmp['Name'] = album[1].split('_$!_')[0]
+        tmp['Imagem'] = album[1].split('_$!_')[1]
         albums.append(tmp)
-
         tmp = dict()
 
-    return render(request, 'albums.html', {'albums':albums})
+    return render(request, 'albums.html', {'albums': albums, 'flist': flist})
 
 def charts(request):
     return render(request, 'charts.html')
@@ -233,7 +228,13 @@ def albuminfo(request):
     for p in query4.iter():
         photo = p[1]
 
-    return render(request, 'albuminfo.html', {'tracks':tracks, 'tags':tags, 'wiki':wiki, 'photo':photo})
+    query5 = session.query("""for $a in collection('musicbox/artists.xml')//artists/artist/album[name=""" + "'" + album_name + "'""""]
+                                return $a/artist/text()""")
+    artist = ""
+    for n in query5.iter():
+        artist=n[1]
+
+    return render(request, 'albuminfo.html', {'tracks':tracks, 'tags':tags, 'wiki':wiki, 'photo':photo, 'artist':artist, 'album_name':album_name})
 
 def artist_page(request):
     return render(request, 'artist_page.html')

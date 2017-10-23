@@ -59,8 +59,8 @@
                     <tbody>
                     {% for artist in artists %}
                         <tr>
-                            <td> {{ artist.Name }}</td>
-                            <td> {{ artist.Number }}</td>
+                            <td> {{ artist.name }}</td>
+                            <td> {{ artist.number }}</td>
                         </tr>
                     {% endfor %}
                     </tbody>
@@ -103,8 +103,8 @@
 
     </div>
 
-    <h3 style="text-align: center; font-weight: bold" ;>Latest News</h3>
     <div class="row">
+        <h3 style="text-align: center; font-weight: bold" ;>Latest News</h3>
         {% for n in news %}
             <div class="col-md-4">
                 <div class="signle_iteam slick-slide slick-cloned slick-active" style="width: 400px;"><img

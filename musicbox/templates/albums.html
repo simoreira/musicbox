@@ -5,70 +5,36 @@
 <div class="row">
     <h2 style="text-align: center; font-weight: bold; padding: 35px">All Albums</h2>
     <ul class="alphabet">
-        <li data-id="A" onclick="showAlbums(this)">A</li>
-        <li data-id="B" onclick="showAlbums(this)">B</li>
-        <li data-id="C" onclick="showAlbums(this)">C</li>
-        <li data-id="D" onclick="showAlbums(this)">D</li>
-        <li data-id="E" onclick="showAlbums(this)">E</li>
-        <li data-id="F" onclick="showAlbums(this)">F</li>
-        <li data-id="G" onclick="showAlbums(this)">G</li>
-        <li data-id="H" onclick="showAlbums(this)">H</li>
-        <li data-id="I" onclick="showAlbums(this)">I</li>
-        <li data-id="J" onclick="showAlbums(this)">J</li>
-        <li data-id="K" onclick="showAlbums(this)">K</li>
-        <li data-id="L" onclick="showAlbums(this)">L</li>
-        <li data-id="M" onclick="showAlbums(this)">M</li>
-        <li data-id="N" onclick="showAlbums(this)">N</li>
-        <li data-id="O" onclick="showAlbums(this)">O</li>
-        <li data-id="P" onclick="showAlbums(this)">P</li>
-        <li data-id="Q" onclick="showAlbums(this)">Q</li>
-        <li data-id="R" onclick="showAlbums(this)">R</li>
-        <li data-id="S" onclick="showAlbums(this)">S</li>
-        <li data-id="T" onclick="showAlbums(this)">T</li>
-        <li data-id="U" onclick="showAlbums(this)">U</li>
-        <li data-id="V" onclick="showAlbums(this)">V</li>
-        <li data-id="W" onclick="showAlbums(this)">W</li>
-        <li data-id="X" onclick="showAlbums(this)">X</li>
-        <li data-id="Y" onclick="showAlbums(this)">Y</li>
-        <li data-id="Z" onclick="showAlbums(this)">Z</li>
+        {% for l in flist %}
+            <li class="active" onclick="location.href='/album/?name={{ l.ll }}'">{{ l.ll }}</li>
+        {% endfor %}
+
     </ul>
 </div>
 
 <div class="row" style="margin-top: 10px">
-    <div class="col-md-6">
-        <div class="w3-container">
-            <table class="table table-striped table-hover" id="olaaa">
-                {% for album in albums %}
-                    <tr class='clickable-row' data-href='/album/details/?name={{ album.Name }}' onMouseOver="ShowPicture('Style',1)" onMouseOut="ShowPicture('Style',0)">
-                    <td> {{ album.Name }} </td>
-                    </tr>
-                {% endfor %}
-            </table>
-
-        </div>
+    {% for oi in albums %}
+    <div class="col-md-4">
+        <a href='/album/details/?name={{ oi.Name }}'>
+            <img class="img-responsive img-thumbnail" src="{{ oi.Imagem }}">
+            <h5>{{ oi.Name }}</h5>
+        </a>
     </div>
-    <div class="col-md-6">
-
-        <div id="Style"><img src="http://www.wallpaperama.com/post-images/forums/200901/11-880-aaaa.jpg"></div>
-    </div>
+    {% endfor %}
 </div>
+
 
 {% endblock %}
 
 {% block jspage %}
 
 <script>
-    function showAlbums(elm) {
-        var x = elm.getAttribute('data-id');
-
-    }
 
     jQuery(document).ready(function($) {
         $(".clickable-row").click(function() {
             window.location = $(this).data("href");
         });
     });
-
 
     function ShowPicture(id,Source) {
         if (Source=="1"){
