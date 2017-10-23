@@ -13,7 +13,9 @@ from django.contrib.auth.models import User
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 import xmlschema
 import sys
-import json
+import xml.etree.cElementTree as etree
+
+
 session = BaseXClient.Session('localhost', 1984, 'admin', 'admin')
 
 
@@ -46,10 +48,13 @@ def parse_from_api(url, file_name):
         print("%s.xml is an invalid XML file." %file_name)
         sys.exit()
 
+
+    session.add("%s.xml" % file_name, content)
     os.remove("%s.xml" % file_name)
 
 #create database
 session.execute("create db musicbox")
+
 #seed database
 doc = xml.dom.minidom.parse("artists.xml")
 content = doc.toxml()
@@ -61,6 +66,9 @@ if(schema.is_valid('artists.xml')):
 else:
     print("artists.xml is an invalid XML file.")
     sys.exit()
+
+session.add("artists.xml", content)
+
 #add xml with top current tracks
 get_top_tracks_url = "http://ws.audioscrobbler.com/2.0/?method=chart.gettoptracks&api_key=79004d202567282ea27ce27e9c26a498"
 parse_from_api(get_top_tracks_url, "toptracks")
@@ -69,9 +77,63 @@ parse_from_api(get_top_tracks_url, "toptracks")
 get_pt_top_tracks_url = "http://ws.audioscrobbler.com/2.0/?method=geo.gettoptracks&country=portugal&api_key=79004d202567282ea27ce27e9c26a498"
 parse_from_api(get_pt_top_tracks_url, "toptrack_portugal")
 
+#RSS
+rss_url = "http://www.rollingstone.com/music/rss"
+s = urlopen(rss_url)
+contents = s.read()
+file = open("rss.xml", 'wb')
+file.write(contents)
+file.close()
+doc = xml.dom.minidom.parse("rss.xml")
+content = doc.toxml()
+session.add("rss.xml", content)
+os.remove("rss.xml")
 
 def home(request):
     assert isinstance(request, HttpRequest)
+
+
+def home(request):
+    assert isinstance(request, HttpRequest)
+    tparams = {
+        'title': 'MusicBox',
+    }
+    return render(request, 'index.html', tparams)
+
+def rss(request):
+    session.execute("open musicbox")
+    query = session.query("""declare namespace media = "http://search.yahoo.com/mrss/";
+                             declare namespace content = "http://purl.org/rss/1.0/modules/content/";
+                             file:write("%s/result.xml",
+                             <root>{ 
+                                for $b in collection("musicbox/rss.xml")//item
+                                return <news>{$b/title, $b/link, $b/content:encoded, $b/media:group/media:content[1]}</news>}</root>
+                         )""" % os.path.dirname(os.path.abspath(__file__)))
+
+    query.execute()
+    tree = etree.parse('%s/result.xml' % os.path.dirname(os.path.abspath(__file__)))
+    root = tree.getroot()
+    news = dict()
+    news_list = []
+    namespace = {'content': "http://purl.org/rss/1.0/modules/content/", 'media': "http://search.yahoo.com/mrss/"}
+
+    for elem in root.iter('news'):
+        news['Title'] = elem.find("title").text
+        news['Link'] = elem.find("link").text
+        news['Content'] = elem.find("content:encoded", namespace).text
+        news['Image'] = elem.find("media:content", namespace).attrib.get('url')
+
+        news_list.append(news)
+        news = dict()
+
+    print(news_list)
+    os.remove("%s/result.xml" % os.path.dirname(os.path.abspath(__file__)))
+
+    return news_list
+# Create your views here.
+
+def top_artists(request):
+    news_list = rss(request)
     session.execute("open musicbox")
 
     query = session.query("""for $b in collection('musicbox/artists.xml')//artists/artist
@@ -86,7 +148,6 @@ def home(request):
         list.append(tmp)
         tmp = dict()
 
-
     page = request.GET.get('page', 1)
 
     paginator = Paginator(list, 10)
@@ -97,7 +158,7 @@ def home(request):
     except EmptyPage:
         artists = paginator.page(paginator.num_pages)
 
-    return render(request,'index.html', {'artists':artists})
+    return render(request,'index.html', {'artists':artists,'news':news_list})
 
 def login(request):
     return render(request)
