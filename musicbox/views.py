@@ -110,6 +110,7 @@ def albums(request):
     session.execute("open musicbox")
 
     letter = 'L'
+    print(letter)
     query = session.query("""for $x in collection("musicbox/artists.xml")//artists/artist/album
                               where starts-with($x/name, """ + "'" + letter + "')""""
                               order by $x/name

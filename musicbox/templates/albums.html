@@ -39,13 +39,17 @@
         <div class="w3-container">
             <table class="table table-striped table-hover" id="olaaa">
                 {% for album in albums %}
-                    <tr class='clickable-row' data-href='/album/details/?name={{ album.Name }}' >
+                    <tr class='clickable-row' data-href='/album/details/?name={{ album.Name }}' onMouseOver="ShowPicture('Style',1)" onMouseOut="ShowPicture('Style',0)">
                     <td> {{ album.Name }} </td>
                     </tr>
                 {% endfor %}
             </table>
 
         </div>
+    </div>
+    <div class="col-md-6">
+
+        <div id="Style"><img src="http://www.wallpaperama.com/post-images/forums/200901/11-880-aaaa.jpg"></div>
     </div>
 </div>
 
@@ -64,6 +68,20 @@
             window.location = $(this).data("href");
         });
     });
+
+
+    function ShowPicture(id,Source) {
+        if (Source=="1"){
+            if (document.layers) document.layers[''+id+''].visibility = "show"
+            else if (document.all) document.all[''+id+''].style.visibility = "visible"
+            else if (document.getElementById) document.getElementById(''+id+'').style.visibility = "visible"
+        }
+        else if (Source=="0"){
+            if (document.layers) document.layers[''+id+''].visibility = "hide"
+            else if (document.all) document.all[''+id+''].style.visibility = "hidden"
+            else if (document.getElementById) document.getElementById(''+id+'').style.visibility = "hidden"
+        }
+    }
 </script>
 
 {% endblock %}
