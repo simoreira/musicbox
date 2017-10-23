@@ -14,7 +14,7 @@
 
 <div class="row" style="margin-top: 10px">
     {% for oi in albums %}
-    <div class="col-md-4">
+    <div class="col-md-3">
         <a href='/album/details/?name={{ oi.Name }}'>
             <img class="img-responsive img-thumbnail" src="{{ oi.Imagem }}">
             <h5>{{ oi.Name }}</h5>
@@ -35,19 +35,6 @@
             window.location = $(this).data("href");
         });
     });
-
-    function ShowPicture(id,Source) {
-        if (Source=="1"){
-            if (document.layers) document.layers[''+id+''].visibility = "show"
-            else if (document.all) document.all[''+id+''].style.visibility = "visible"
-            else if (document.getElementById) document.getElementById(''+id+'').style.visibility = "visible"
-        }
-        else if (Source=="0"){
-            if (document.layers) document.layers[''+id+''].visibility = "hide"
-            else if (document.all) document.all[''+id+''].style.visibility = "hidden"
-            else if (document.getElementById) document.getElementById(''+id+'').style.visibility = "hidden"
-        }
-    }
 </script>
 
 {% endblock %}

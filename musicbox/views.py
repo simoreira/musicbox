@@ -67,7 +67,6 @@ else:
     print("artists.xml is an invalid XML file.")
     sys.exit()
 
-session.add("artists.xml", content)
 
 #add xml with top current tracks
 get_top_tracks_url = "http://ws.audioscrobbler.com/2.0/?method=chart.gettoptracks&api_key=79004d202567282ea27ce27e9c26a498"
@@ -117,43 +116,61 @@ def home(request):
         news_list.append(news)
         news = dict()
 
-    print(news_list)
     os.remove("%s/result.xml" % os.path.dirname(os.path.abspath(__file__)))
 
-    query2 = session.query("""for $b in collection('musicbox/artists.xml')//artists/artist
+    query2 = session.query("""(for $b in collection('musicbox/artists.xml')//artists/artist
                                      order by xs:integer($b/listeners) descending
-                                     return concat(xs:string($b/name/text()),':',xs:string($b/listeners/text()))""")
+                                     return concat(xs:string($b/name/text()),'_$!_', xs:string($b/image[@size='large']/text())))[position()=1 to 12]""")
 
     list = []
     top_artist = dict()
     for name in query2.iter():
-        top_artist['name'] = name[1].split(':')[0]
-        top_artist['number'] = name[1].split(':')[1]
+        print(name)
+        top_artist['name'] = name[1].split('_$!_')[0]
+        top_artist['imagem'] = name[1].split('_$!_')[1]
         list.append(top_artist)
         top_artist = dict()
 
-    page = request.GET.get('page', 1)
-
-    paginator = Paginator(list, 10)
-    try:
-        artists = paginator.page(page)
-    except PageNotAnInteger:
-        artists = paginator.page(1)
-    except EmptyPage:
-        artists = paginator.page(paginator.num_pages)
-
-    return render(request, 'index.html', {'artists': artists, 'news': news_list})
+    return render(request, 'index.html', {'artists': list, 'news': news_list})
 
 def login(request):
     return render(request)
 
 def artists(request):
-    return render(request, 'artists.html')
+    assert isinstance(request, HttpRequest)
+    list = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U',
+            'V', 'W', 'X', 'Y', 'Z']
+    lst = dict()
+    flist = []
+    for l in list:
+        lst['ll'] = l[0]
+        flist.append(lst)
+        lst = dict()
+
+    if request.GET.get('name') == None:
+        letter = 'A'
+    else:
+        letter = request.GET.get('name')
+
+    session.execute("open musicbox")
+    query = session.query("""for $x in collection("musicbox/artists.xml")//artists/artist
+                                      where starts-with($x/name, """ + "'" + letter + "')""""
+                                      order by $x/name
+                                      return concat(xs:string($x/name/text()), '_$!_', xs:string($x/image[@size='large']/text()))""")
+    artists = []
+    tmp = dict()
+    for art in query.iter():
+        tmp['Name'] = art[1].split('_$!_')[0]
+        tmp['Imagem'] = art[1].split('_$!_')[1]
+        artists.append(tmp)
+        tmp = dict()
+
+    return render(request, 'artists.html', {'artists': artists, 'flist': flist})
 
 def albums(request):
     assert isinstance(request, HttpRequest)
     list = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U',
-            'V', 'W', 'X', 'Z']
+            'V', 'W', 'X', 'Y', 'Z']
     lst = dict()
     flist = []
     for l in list:
@@ -237,4 +254,51 @@ def albuminfo(request):
     return render(request, 'albuminfo.html', {'tracks':tracks, 'tags':tags, 'wiki':wiki, 'photo':photo, 'artist':artist, 'album_name':album_name})
 
 def artist_page(request):
-    return render(request, 'artist_page.html')
+    session.execute("open musicbox")
+
+    ###############################
+    artist_name = request.GET['name']
+    query1 = session.query(
+        """for $b in collection('musicbox/artists.xml')//artists/artist[name=""" + "'" + artist_name + "'""""]/image[@size='extralarge'] return data($b/text())""")
+
+    image = ""
+    for img in query1.iter():
+        image = img[1]
+
+    ################################
+    query2 = session.query("""for $c in collection('musicbox/artists.xml')//artist
+                                  where $c/name=""" + "'" + artist_name + "'""""
+                                  return (data($c/bio/summary))""")
+
+    bio = ""
+    for b in query2.iter():
+        bio = b[1]
+
+    ################################
+    query3 = session.query("""(for $c in collection('musicbox/artists.xml')/lfm/artists//artist//album
+                                  where $c/artist=""" + "'" + artist_name + "'""""
+                                  order by $c/listeners
+                                  return concat(xs:string($c/name/text()),'_$?_',xs:string($c/image[@size='large']/text())))[position() = 1 to 3]""")
+
+    album = []
+    tmp = dict()
+    for a in query3.iter():
+        tmp['name'] = a[1].split('_$?_')[0]
+        tmp['imagem'] = a[1].split('_$?_')[1]
+        album.append(tmp)
+        tmp = dict()
+
+    ################################
+    query4 = session.query("""for $c in collection('musicbox/artists.xml')//artists//artist//album
+                                  where $c/artist=""" + "'" + artist_name + "'""""
+                                  return concat(xs:string($c/name/text()),'_$?_',xs:string($c/image[@size='large']/text()))""")
+    list2 = []
+    tmp2 = dict()
+
+    for c in query4.iter():
+        tmp2['name'] = c[1].split('_$?_')[0]
+        tmp2['imagem'] = c[1].split('_$?_')[1]
+        list2.append(tmp2)
+        tmp2 = dict()
+
+    return render(request, 'artist_page.html', {'image': image, 'bio': bio, 'album': album, 'lista': list2, 'name':artist_name})

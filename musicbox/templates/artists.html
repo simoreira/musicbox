@@ -5,33 +5,36 @@
 <div class="row">
     <h2 style="text-align: center; font-weight: bold; padding: 35px">All Artists</h2>
     <ul class="alphabet">
-        <li>A</li>
-            <li>B</li>
-            <li>C</li>
-            <li>D</li>
-            <li>E</li>
-            <li>F</li>
-            <li>G</li>
-            <li>H</li>
-            <li>I</li>
-            <li>J</li>
-            <li>K</li>
-            <li>L</li>
-            <li>M</li>
-            <li>N</li>
-            <li>O</li>
-            <li>P</li>
-            <li>Q</li>
-            <li>R</li>
-            <li>S</li>
-            <li>T</li>
-            <li>U</li>
-            <li>V</li>
-            <li>W</li>
-            <li>X</li>
-            <li>Y</li>
-            <li>Z</li>
+        {% for l in flist %}
+            <li class="active" onclick="location.href='/artists/?name={{ l.ll }}'">{{ l.ll }}</li>
+        {% endfor %}
+
     </ul>
 </div>
+
+<div class="row" style="margin-top: 10px">
+    {% for a in artists %}
+    <div class="col-md-3">
+        <a href='/artists/details/?name={{ a.Name }}'>
+            <img class="img-responsive img-thumbnail" src="{{ a.Imagem }}">
+            <h5>{{ a.Name }}</h5>
+        </a>
+    </div>
+    {% endfor %}
+</div>
+
+
+{% endblock %}
+
+{% block jspage %}
+
+<script>
+
+    jQuery(document).ready(function($) {
+        $(".clickable-row").click(function() {
+            window.location = $(this).data("href");
+        });
+    });
+</script>
 
 {% endblock %}
