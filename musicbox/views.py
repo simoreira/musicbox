@@ -14,6 +14,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 import xmlschema
 import sys
 import xml.etree.cElementTree as etree
+import lxml.etree as ET
 
 
 session = BaseXClient.Session('localhost', 1984, 'admin', 'admin')
@@ -63,47 +64,41 @@ parse_from_api(get_top_tracks_url, "toptracks")
 get_pt_top_tracks_url = "http://ws.audioscrobbler.com/2.0/?method=geo.gettoptracks&country=portugal&api_key=79004d202567282ea27ce27e9c26a498"
 parse_from_api(get_pt_top_tracks_url, "toptrack_portugal")
 
-#RSS
-rss_url = "http://www.rollingstone.com/music/rss"
-s = urlopen(rss_url)
-contents = s.read()
-file = open("rss.xml", 'wb')
-file.write(contents)
-file.close()
-doc = xml.dom.minidom.parse("rss.xml")
-content = doc.toxml()
-session.add("rss.xml", content)
-os.remove("rss.xml")
-
 
 def home(request):
     assert isinstance(request, HttpRequest)
-    session.execute("open musicbox")
-    query = session.query("""declare namespace media = "http://search.yahoo.com/mrss/";
-                                 declare namespace content = "http://purl.org/rss/1.0/modules/content/";
-                                 file:write("%s/result.xml",
-                                 <root>{ 
-                                    for $b in collection("musicbox/rss.xml")//item
-                                    return <news>{$b/title, $b/link, $b/content:encoded, $b/media:group/media:content[1]}</news>}</root>
-                             )""" % os.path.dirname(os.path.abspath(__file__)))
 
-    query.execute()
-    tree = etree.parse('%s/result.xml' % os.path.dirname(os.path.abspath(__file__)))
+    rss_url = "http://www.rollingstone.com/music/rss"
+    s = urlopen(rss_url)
+    contents = s.read()
+    file = open("rss.xml", 'wb')
+    file.write(contents)
+    file.close()
+
+    rss_xml = ET.parse("rss.xml")
+    xslt = ET.parse("rss.xslt")
+    transform = ET.XSLT(xslt)
+    new_rss_xml = transform(rss_xml)
+    file = open("%s/new_rss.xml" % os.path.dirname(os.path.abspath(__file__)), 'wb')
+    file.write(new_rss_xml)
+    file.close()
+
+    os.remove("rss.xml")
+
+    tree = etree.parse('%s/new_rss.xml' % os.path.dirname(os.path.abspath(__file__)))
     root = tree.getroot()
     news = dict()
     news_list = []
-    namespace = {'content': "http://purl.org/rss/1.0/modules/content/", 'media': "http://search.yahoo.com/mrss/"}
 
-    for elem in root.iter('news'):
+    for elem in root.iter('item'):
         news['Title'] = elem.find("title").text
         news['Link'] = elem.find("link").text
-        news['Content'] = elem.find("content:encoded", namespace).text
-        news['Image'] = elem.find("media:content", namespace).attrib.get('url')
+        news['Image'] = elem.find("media").text
 
         news_list.append(news)
         news = dict()
 
-    os.remove("%s/result.xml" % os.path.dirname(os.path.abspath(__file__)))
+    os.remove("%s/new_rss.xml" % os.path.dirname(os.path.abspath(__file__)))
 
     query2 = session.query("""(for $b in collection('musicbox/artists.xml')//artists/artist
                                      order by xs:integer($b/listeners) descending
@@ -120,7 +115,6 @@ def home(request):
         top_artist['count'] = count
         list.append(top_artist)
         top_artist = dict()
-        print(list)
 
     return render(request, 'index.html', {'artists': list, 'news': news_list})
 
