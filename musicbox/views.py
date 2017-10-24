@@ -464,7 +464,7 @@ def profile(request):
     query2 = session.query("""for $c in collection('musicbox/Users.xml')//users/user
                                 return
                                 if ($c/@login="True") then
-                                    xs:string($c/starred/fav[@type="artist"])
+                                    data($c/starred/fav[@type="artist"])
                                 else
                                     break""")
 

@@ -3,8 +3,9 @@
 {% block content %}
     <div class="row">
         <div class="col-md-12">
-            {% for a in artists %}
+
                 <h3 style="text-align: center; margin-top: 40px;">Artists</h3>
+            {% for a in artists %}
                 <div class="col-md-3">
                     <a href='/artists/details/?name={{ a.Name }}'>
                         <img class="img-responsive img-thumbnail" src="{{ a.Image }}">
@@ -17,8 +18,9 @@
 
     <div class="row">
         <div class="col-md-12">
-            {% for a in albums %}
+
                 <h3 style="text-align: center; margin-top: 40px;">Albums</h3>
+            {% for a in albums %}
                 <div class="col-md-3">
                     <a href='/album/details/?name={{ a.Name }}'>
                         <img class="img-responsive img-thumbnail" src="{{ a.Image }}">
