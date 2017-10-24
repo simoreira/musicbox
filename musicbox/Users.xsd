@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <xs:element name="users" type="usersType"/>
+  <xs:complexType name="starredType">
+    <xs:sequence>
+      <xs:element type="favType" name="fav" maxOccurs="unbounded" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
   <xs:complexType name="usersType">
     <xs:sequence>
       <xs:element type="userType" name="user"/>
@@ -11,14 +16,15 @@
       <xs:element type="xs:string" name="name"/>
       <xs:element type="xs:string" name="email"/>
       <xs:element type="xs:string" name="password"/>
-      <xs:element type="favType" name="fav"/>
+      <xs:element type="starredType" name="starred"/>
     </xs:sequence>
     <xs:attribute type="xs:string" name="login"/>
   </xs:complexType>
-  <xs:complexType name="favType" mixed="true">
-    <xs:sequence>
-      <xs:element type="favType" name="fav" maxOccurs="unbounded" minOccurs="0"/>
-    </xs:sequence>
-    <xs:attribute type="xs:string" name="type" use="optional"/>
+  <xs:complexType name="favType">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute type="xs:string" name="type" use="optional"/>
+      </xs:extension>
+    </xs:simpleContent>
   </xs:complexType>
 </xs:schema>

@@ -34,7 +34,7 @@ def parse_from_api(url, file_name):
         session.add("%s.xml" % file_name, content)
     else:
         print("%s.xml is an invalid XML file." % file_name)
-        sys.exit()
+        sys.exit() 
 
     os.remove("%s/%s.xml" % (os.path.dirname(os.path.abspath(__file__)), file_name))
 

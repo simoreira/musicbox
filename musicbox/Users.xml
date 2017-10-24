@@ -3,9 +3,9 @@
         <name>Inês Moreira</name>
         <email>simoreira@ua.pt</email>
         <password>admin123</password>
-        <fav>
+        <starred>
             <fav type="artist">Radiohead</fav>
             <fav type="album">Paranoid Android</fav>
-        </fav>
+        </starred>
     </user>
 </users>
