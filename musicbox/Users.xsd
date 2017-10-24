@@ -13,6 +13,7 @@
       <xs:element type="xs:string" name="password"/>
       <xs:element type="favType" name="fav"/>
     </xs:sequence>
+    <xs:attribute type="xs:string" name="login"/>
   </xs:complexType>
   <xs:complexType name="favType" mixed="true">
     <xs:sequence>

@@ -1,5 +1,5 @@
 <users>
-    <user>
+    <user login="False">
         <name>Inês Moreira</name>
         <email>simoreira@ua.pt</email>
         <password>admin123</password>
