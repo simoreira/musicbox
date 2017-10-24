@@ -170,7 +170,15 @@ def search_query(request):
     os.remove("%s/result.xml" % os.path.dirname(os.path.abspath(__file__)))
     os.remove("%s/result2.xml" % os.path.dirname(os.path.abspath(__file__)))
 
-   
+    if not albums_list and not artists_list:
+        return render(request, 'searchNFound.html')
+    elif not albums_list and artists_list:
+        return render(request, 'search.html', {'artists':artists_list})
+    elif not artists_list and albums_list:
+        return render(request, 'search.html', {'albums': albums_list})
+    else:
+        return render(request, 'search.html', {'albums': albums_list, 'artists': artists_list})
+
 
 def artists(request):
     assert isinstance(request, HttpRequest)

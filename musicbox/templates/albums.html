@@ -13,11 +13,11 @@
 </div>
 
 <div class="row" style="margin-top: 10px">
-    {% for oi in albums %}
+    {% for a in albums %}
     <div class="col-md-3">
-        <a href='/album/details/?name={{ oi.Name }}'>
-            <img class="img-responsive img-thumbnail" src="{{ oi.Imagem }}">
-            <h5>{{ oi.Name }}</h5>
+        <a href='/album/details/?name={{ a.Name }}'>
+            <img class="img-responsive img-thumbnail" src="{{ a.Imagem }}">
+            <h5>{{ a.Name }}</h5>
         </a>
     </div>
     {% endfor %}
