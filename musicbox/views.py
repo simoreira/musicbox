@@ -118,9 +118,6 @@ def home(request):
 
     return render(request, 'index.html', {'artists': list, 'news': news_list})
 
-def login(request):
-    return render(request)
-
 def search_query(request):
 
     search = dict(request.POST)
@@ -378,3 +375,9 @@ def charts(request):
         tmp2 = dict()
 
     return render(request, 'charts.html', {'list1' : list1, 'list2' :list2})
+
+def login(request):
+    return render(request, 'logIn.html')
+
+def register(request):
+    return render(request, 'register.html')
