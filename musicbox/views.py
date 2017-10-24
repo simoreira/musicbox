@@ -107,15 +107,20 @@ def home(request):
 
     query2 = session.query("""(for $b in collection('musicbox/artists.xml')//artists/artist
                                      order by xs:integer($b/listeners) descending
-                                     return concat(xs:string($b/name/text()),'_$!_', xs:string($b/image[@size='large']/text())))[position()=1 to 12]""")
+                                     return concat(xs:string($b/name/text()),'_$!_', xs:string($b/listeners), '_$!_', xs:string($b/image[@size='large']/text())))[position()=1 to 12]""")
 
     list = []
     top_artist = dict()
+    count =0
     for name in query2.iter():
         top_artist['name'] = name[1].split('_$!_')[0]
-        top_artist['imagem'] = name[1].split('_$!_')[1]
+        top_artist['listeners'] = name[1].split('_$!_')[1]
+        top_artist['imagem'] = name[1].split('_$!_')[2]
+        count += 1
+        top_artist['count'] = count
         list.append(top_artist)
         top_artist = dict()
+        print(list)
 
     return render(request, 'index.html', {'artists': list, 'news': news_list})
 
@@ -238,7 +243,6 @@ def albums(request):
         tmp['Imagem'] = album[1].split('_$!_')[1]
         albums.append(tmp)
         tmp = dict()
-
     return render(request, 'albums.html', {'albums': albums, 'flist': flist})
 
 def albuminfo(request):
@@ -349,31 +353,34 @@ def charts(request):
 
     query1 = session.query("""(for $c in collection('musicbox/toptrack_portugal.xml')/lfm/tracks/track
                                 order by $c/listeners
-                                return concat(xs:string($c/name/text()), '_$?_', xs:string($c/artist/name/text())))[position() = 1 to 10]""")
+                                return concat(xs:string($c/name/text()), '_$?_', xs:string($c/artist/name/text()), '_$?_', xs:string($c/image[@size='large']/text())))[position() = 1 to 10]""")
     list1 = []
     tmp = dict()
-
+    count = 0
     for c in query1.iter():
+        count += 1
         tmp['name'] = c[1].split('_$?_')[0]
         tmp['artist'] = c[1].split('_$?_')[1]
+        tmp['image'] = c[1].split('_$?_')[2]
+        tmp['count'] = count
         list1.append(tmp)
         tmp = dict()
 
     #########################
     query2 = session.query("""(for $c in collection('musicbox/toptracks.xml')/lfm/tracks/track
                                 order by $c/listeners
-                                return concat(xs:string($c/name/text()), '_$?_', xs:string($c/artist/name/text())))[position() = 1 to 10]""")
+                                return concat(xs:string($c/name/text()), '_$?_', xs:string($c/artist/name/text()), '_$?_', xs:string($c/image[@size='large']/text())))[position() = 1 to 10]""")
 
     list2 = []
     tmp2 = dict()
-
+    count2 = 0
     for d in query2.iter():
+        count2 +=1
         tmp2['name'] = d[1].split('_$?_')[0]
         tmp2['artist'] = d[1].split('_$?_')[1]
+        tmp2['image'] = d[1].split('_$?_')[2]
+        tmp2['count'] = count2
         list2.append(tmp2)
         tmp2 = dict()
-
-    print(list1)
-    print(list2)
 
     return render(request, 'charts.html', {'list1' : list1, 'list2' :list2})

@@ -14,12 +14,12 @@
 
 <div class="row" style="margin-top: 10px">
     {% for a in albums %}
-    <div class="col-md-3">
-        <a href='/album/details/?name={{ a.Name }}'>
-            <img class="img-responsive img-thumbnail" src="{{ a.Imagem }}">
-            <h5>{{ a.Name }}</h5>
-        </a>
-    </div>
+        <div class="col-md-3">
+            <a href='/album/details/?name={{ a.Name }}'>
+                <img class="img-responsive img-thumbnail" src="{{ a.Imagem }}">
+                <h5>{{ a.Name }}</h5>
+            </a>
+        </div>
     {% endfor %}
 </div>
 

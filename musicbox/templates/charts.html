@@ -2,32 +2,46 @@
 
 {% block content %}
 
-<div class="row">
-    <h2 style="text-align: center; font-weight: bold; padding: 35px">Charts</h2>
-    <div class="col-md-6">
-            <h3 style="text-align: center; font-weight: bold";>Top Tracks (Portugal)</h3>
-            <table class="table table-striped table-hover">
-                <tbody>
-                    {% for l in list1 %}
-                        <tr>
-                            <td> {{ l.name }} - {{ l.artist }}</td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-    </div>
-    <div class="col-md-6">
-            <h3 style="text-align: center; font-weight: bold";>World Top Tracks</h3>
-            <table class="table table-striped table-hover">
-                <tbody>
-                    {% for l in list2 %}
-                        <tr>
-                            <td> {{ l.name }} - {{ l.artist }}</td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-    </div>
-</div>
+    <div class="row">
+        <h2 style="text-align: center; font-weight: bold; padding: 35px">Charts</h2>
+        <div class="col-md-6 ">
+            <h3 style="text-align: center; font-weight: bold" ;>Portugal Top 10 Tracks</h3>
 
+            <table class="table table-hover">
+                <tbody>
+                {% for l in list1 %}
+                    <tr class='clickable-row' data-href='/artists/details/?name={{ l.artist }}'>
+                        <td><img class=" img-thumbnail" style="margin-bottom: 1px;" src="{{ l.image }}"></td>
+                        <td><h5>{{ l.count }}. {{ l.artist }}-{{ l.name }}</h5></td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+
+        </div>
+        <div class="col-md-6 col-lg-5">
+            <h3 style="text-align: center; font-weight: bold;">World Top 10 Tracks</h3>
+            <table class="table table-hover">
+                <tbody>
+                {% for l in list2 %}
+                    <tr class='clickable-row' data-href='/artists/details/?name={{ l.artist }}'>
+                        <td><img class=" img-thumbnail" style="margin-bottom: 1px;" src="{{ l.image }}"></td>
+                        <td><h5>{{ l.count }}. {{ l.artist }}-{{ l.name }}</h5></td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block jspage %}
+    <script>
+        jQuery(document).ready(function($) {
+            $(".clickable-row").click(function() {
+                window.location = $(this).data("href");
+            });
+        });
+    </script>
 {% endblock %}

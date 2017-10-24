@@ -3,7 +3,7 @@
 {% block content %}
 <div class="row">
     <div class="col-md-4" style="margin-top: 40px; text-align: center">
-        <h3 style="text-align: center; font-weight: bold">{{ artist }}</h3>
+        <a href="/artists/details/?name={{ artist }}"><h3 style="text-align: center; font-weight: bold">{{ artist }}</h3></a>
         <img src="{{ photo }}">
         <h3 style="text-align: center; font-weight: bold">{{ album_name }}</h3>
     </div>
