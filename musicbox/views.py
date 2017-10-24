@@ -37,7 +37,6 @@ def parse_from_api(url, file_name):
         sys.exit()
 
 
-    session.add("%s.xml" % file_name, content)
     os.remove("%s.xml" % file_name)
 
 #create database
@@ -242,9 +241,6 @@ def albums(request):
 
     return render(request, 'albums.html', {'albums': albums, 'flist': flist})
 
-def charts(request):
-    return render(request, 'charts.html')
-
 def albuminfo(request):
     assert isinstance(request, HttpRequest)
     tracks = []
@@ -346,3 +342,38 @@ def artist_page(request):
         tmp2 = dict()
 
     return render(request, 'artist_page.html', {'image': image, 'bio': bio, 'album': album, 'lista': list2, 'name':artist_name})
+
+def charts(request):
+
+    session.execute("open musicbox")
+
+    query1 = session.query("""(for $c in collection('musicbox/toptrack_portugal.xml')/lfm/tracks/track
+                                order by $c/listeners
+                                return concat(xs:string($c/name/text()), '_$?_', xs:string($c/artist/name/text())))[position() = 1 to 10]""")
+    list1 = []
+    tmp = dict()
+
+    for c in query1.iter():
+        tmp['name'] = c[1].split('_$?_')[0]
+        tmp['artist'] = c[1].split('_$?_')[1]
+        list1.append(tmp)
+        tmp = dict()
+
+    #########################
+    query2 = session.query("""(for $c in collection('musicbox/toptracks.xml')/lfm/tracks/track
+                                order by $c/listeners
+                                return concat(xs:string($c/name/text()), '_$?_', xs:string($c/artist/name/text())))[position() = 1 to 10]""")
+
+    list2 = []
+    tmp2 = dict()
+
+    for d in query2.iter():
+        tmp2['name'] = d[1].split('_$?_')[0]
+        tmp2['artist'] = d[1].split('_$?_')[1]
+        list2.append(tmp2)
+        tmp2 = dict()
+
+    print(list1)
+    print(list2)
+
+    return render(request, 'charts.html', {'list1' : list1, 'list2' :list2})

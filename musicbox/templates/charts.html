@@ -1,26 +1,33 @@
 {% extends 'layout.html' %}
 
 {% block content %}
+
 <div class="row">
     <h2 style="text-align: center; font-weight: bold; padding: 35px">Charts</h2>
     <div class="col-md-6">
-        <div class="w3-container w3-grey">
-            <h3 style="text-align: center; font-weight: bold";>Top Artists</h3>
-            <ul>
-                <li>wecknyew</li>
-            </ul>
-        </div>
+            <h3 style="text-align: center; font-weight: bold";>Top Tracks (Portugal)</h3>
+            <table class="table table-striped table-hover">
+                <tbody>
+                    {% for l in list1 %}
+                        <tr>
+                            <td> {{ l.name }} - {{ l.artist }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
     </div>
     <div class="col-md-6">
-        <div class="w3-container w3-grey">
-            <h3 style="text-align: center; font-weight: bold";>Top Tracks</h3>
-            <div class="list-group">
-                <a class="list-group-item" style="">First item</a>
-                <a class="list-group-item">Second item</a>
-                <a class="list-group-item">Third item</a>
-            </div>
-        </div>
+            <h3 style="text-align: center; font-weight: bold";>World Top Tracks</h3>
+            <table class="table table-striped table-hover">
+                <tbody>
+                    {% for l in list2 %}
+                        <tr>
+                            <td> {{ l.name }} - {{ l.artist }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
     </div>
-
 </div>
+
 {% endblock %}
