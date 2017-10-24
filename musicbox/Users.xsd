@@ -11,6 +11,13 @@
       <xs:element type="xs:string" name="name"/>
       <xs:element type="xs:string" name="email"/>
       <xs:element type="xs:string" name="password"/>
+      <xs:element type="favType" name="fav"/>
     </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="favType" mixed="true">
+    <xs:sequence>
+      <xs:element type="favType" name="fav" maxOccurs="unbounded" minOccurs="0"/>
+    </xs:sequence>
+    <xs:attribute type="xs:string" name="type" use="optional"/>
   </xs:complexType>
 </xs:schema>

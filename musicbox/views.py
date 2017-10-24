@@ -36,7 +36,6 @@ def parse_from_api(url, file_name):
         print("%s.xml is an invalid XML file." % file_name)
         sys.exit()
 
-
     os.remove("%s/%s.xml" % (os.path.dirname(os.path.abspath(__file__)), file_name))
 
 def database():
