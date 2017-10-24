@@ -113,23 +113,35 @@ def home(request):
     list = []
     top_artist = dict()
     for name in query2.iter():
-        print(name)
         top_artist['name'] = name[1].split('_$!_')[0]
         top_artist['imagem'] = name[1].split('_$!_')[1]
         list.append(top_artist)
         top_artist = dict()
 
+    return render(request, 'index.html', {'artists': list, 'news': news_list})
+
+def login(request):
+    return render(request)
+
+def search_query(request):
+
+    search = dict(request.POST)
+
+    term = search.get('search_term')[0]
+
+    print(term)
+
     search_artist = session.query("""file:write("%s/result.xml",<root> {
-                                         for $x in collection("musicbox/artists.xml")//artists/artist
-                                         where (contains($x/name, "Radiohead"))
-                                         return <artist>{$x/name, $x/image[@size='large']}</artist>}</root>)""" % os.path.dirname(
-        os.path.abspath(__file__)))
+                                             for $x in collection("musicbox/artists.xml")//artists/artist
+                                             where (contains($x/name, "%s"))
+                                             return <artist>{$x/name, $x/image[@size='large']}</artist>}</root>)""" % (os.path.dirname(
+        os.path.abspath(__file__)), term))
 
     search_album = session.query("""file:write("%s/result2.xml", <root>{
-                                        for $x in collection("musicbox/artists.xml")//artists/artist/album
-                                        where (contains($x/name, "Arcade Fire"))
-                                        return <album>{$x/name, $x/image[@size='large']}</album>}</root>)""" % os.path.dirname(
-        os.path.abspath(__file__)))
+                                            for $x in collection("musicbox/artists.xml")//artists/artist/album
+                                            where (contains($x/name, "%s"))
+                                            return <album>{$x/name, $x/image[@size='large']}</album>}</root>)""" % (os.path.dirname(
+        os.path.abspath(__file__)), term))
     search_artist.execute()
     search_album.execute()
 
@@ -158,13 +170,7 @@ def home(request):
     os.remove("%s/result.xml" % os.path.dirname(os.path.abspath(__file__)))
     os.remove("%s/result2.xml" % os.path.dirname(os.path.abspath(__file__)))
 
-    print(artists_list)
-    print(albums_list)
-
-    return render(request, 'index.html', {'artists': list, 'news': news_list})
-
-def login(request):
-    return render(request)
+   
 
 def artists(request):
     assert isinstance(request, HttpRequest)
