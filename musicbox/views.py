@@ -19,71 +19,89 @@ import lxml.etree as ET
 
 session = BaseXClient.Session('localhost', 1984, 'admin', 'admin')
 
-
 def parse_from_api(url, file_name):
     s = urlopen(url)
     contents = s.read()
-    file = open("%s.xml" % file_name, 'wb')
+    file = open("%s/%s.xml" % (os.path.dirname(os.path.abspath(__file__)) ,file_name), 'wb')
     file.write(contents)
     file.close()
-    doc = xml.dom.minidom.parse("%s.xml" % file_name)
+    doc = xml.dom.minidom.parse("%s/%s.xml" % (os.path.dirname(os.path.abspath(__file__)), file_name))
     content = doc.toxml()
 
-    schema = xmlschema.XMLSchema('%s.xsd' % file_name)
-    if(schema.is_valid('%s.xml' %file_name)):
+    schema = xmlschema.XMLSchema('%s/%s.xsd' % (os.path.dirname(os.path.abspath(__file__)), file_name))
+    if(schema.is_valid('%s/%s.xml' % (os.path.dirname(os.path.abspath(__file__)), file_name))):
         print("%s.xml is a valid XML file." % file_name)
         session.add("%s.xml" % file_name, content)
     else:
-        print("%s.xml is an invalid XML file." %file_name)
+        print("%s.xml is an invalid XML file." % file_name)
         sys.exit()
 
 
-    os.remove("%s.xml" % file_name)
+    os.remove("%s/%s.xml" % (os.path.dirname(os.path.abspath(__file__)), file_name))
 
-#create database
-session.execute("create db musicbox")
+def database():
+    try:
+        session.execute("open musicbox")
+    except:
+        print("Creating database")
+        #create database
+        session.execute("create db musicbox")
 
-#seed database
-doc = xml.dom.minidom.parse("artists.xml")
-content = doc.toxml()
-schema = xmlschema.XMLSchema('artists.xsd')
+        #seed database
+        doc = xml.dom.minidom.parse("%s/artists.xml" % os.path.dirname(os.path.abspath(__file__)))
+        content = doc.toxml()
+        schema = xmlschema.XMLSchema('%s/artists.xsd' % os.path.dirname(os.path.abspath(__file__)))
 
-if(schema.is_valid('artists.xml')):
-    print("artists.xml is a valid XML file.")
-    session.add("artists.xml", content)
-else:
-    print("artists.xml is an invalid XML file.")
-    sys.exit()
+        if(schema.is_valid('%s/artists.xml' % os.path.dirname(os.path.abspath(__file__)))):
+            print("artists.xml is a valid XML file.")
+            session.add("artists.xml", content)
+        else:
+            print("artists.xml is an invalid XML file.")
+            sys.exit()
+
+        doc = xml.dom.minidom.parse("%s/Users.xml" % os.path.dirname(os.path.abspath(__file__)))
+        content = doc.toxml()
+        schema = xmlschema.XMLSchema('%s/Users.xsd' % os.path.dirname(os.path.abspath(__file__)))
+
+        if (schema.is_valid('%s/Users.xml' % os.path.dirname(os.path.abspath(__file__)))):
+            print("Users.xml is a valid XML file.")
+            session.add("Users.xml", content)
+        else:
+            print("Users.xml is an invalid XML file.")
+            sys.exit()
 
 
-#add xml with top current tracks
-get_top_tracks_url = "http://ws.audioscrobbler.com/2.0/?method=chart.gettoptracks&api_key=79004d202567282ea27ce27e9c26a498"
-parse_from_api(get_top_tracks_url, "toptracks")
+        #add xml with top current tracks
+        get_top_tracks_url = "http://ws.audioscrobbler.com/2.0/?method=chart.gettoptracks&api_key=79004d202567282ea27ce27e9c26a498"
+        parse_from_api(get_top_tracks_url, "toptracks")
 
-#add xml with top portugal tracks
-get_pt_top_tracks_url = "http://ws.audioscrobbler.com/2.0/?method=geo.gettoptracks&country=portugal&api_key=79004d202567282ea27ce27e9c26a498"
-parse_from_api(get_pt_top_tracks_url, "toptrack_portugal")
+        #add xml with top portugal tracks
+        get_pt_top_tracks_url = "http://ws.audioscrobbler.com/2.0/?method=geo.gettoptracks&country=portugal&api_key=79004d202567282ea27ce27e9c26a498"
+        parse_from_api(get_pt_top_tracks_url, "toptrack_portugal")
+
+        session.execute("open musicbox")
 
 
 def home(request):
+    database()
     assert isinstance(request, HttpRequest)
 
     rss_url = "http://www.rollingstone.com/music/rss"
     s = urlopen(rss_url)
     contents = s.read()
-    file = open("rss.xml", 'wb')
+    file = open("%s/rss.xml" % os.path.dirname(os.path.abspath(__file__)), 'wb')
     file.write(contents)
     file.close()
 
-    rss_xml = ET.parse("rss.xml")
-    xslt = ET.parse("rss.xslt")
+    rss_xml = ET.parse("%s/rss.xml" % os.path.dirname(os.path.abspath(__file__)))
+    xslt = ET.parse("%s/rss.xslt" % os.path.dirname(os.path.abspath(__file__)))
     transform = ET.XSLT(xslt)
     new_rss_xml = transform(rss_xml)
     file = open("%s/new_rss.xml" % os.path.dirname(os.path.abspath(__file__)), 'wb')
     file.write(new_rss_xml)
     file.close()
 
-    os.remove("rss.xml")
+    os.remove("%s/rss.xml" % os.path.dirname(os.path.abspath(__file__)))
 
     tree = etree.parse('%s/new_rss.xml' % os.path.dirname(os.path.abspath(__file__)))
     root = tree.getroot()
@@ -123,8 +141,6 @@ def search_query(request):
     search = dict(request.POST)
 
     term = search.get('search_term')[0]
-
-    print(term)
 
     search_artist = session.query("""file:write("%s/result.xml",<root> {
                                              for $x in collection("musicbox/artists.xml")//artists/artist
@@ -191,7 +207,7 @@ def artists(request):
     else:
         letter = request.GET.get('name')
 
-    session.execute("open musicbox")
+    database()
     query = session.query("""for $x in collection("musicbox/artists.xml")//artists/artist
                                       where starts-with($x/name, """ + "'" + letter + "')""""
                                       order by $x/name
@@ -199,10 +215,12 @@ def artists(request):
     artists = []
     tmp = dict()
     for art in query.iter():
+        print("oi")
         tmp['Name'] = art[1].split('_$!_')[0]
         tmp['Imagem'] = art[1].split('_$!_')[1]
         artists.append(tmp)
         tmp = dict()
+        print(art)
 
     return render(request, 'artists.html', {'artists': artists, 'flist': flist})
 
@@ -222,7 +240,7 @@ def albums(request):
     else:
         letter = request.GET.get('name')
 
-    session.execute("open musicbox")
+    database()
     query = session.query("""for $x in collection("musicbox/artists.xml")//artists/artist/album
                                   where starts-with($x/name, """ + "'" + letter + "')""""
                                   order by $x/name
@@ -243,7 +261,7 @@ def albuminfo(request):
 
     album_name = request.GET['name']
 
-    session.execute("open musicbox")
+    database()
     query = session.query("""for $a in collection("musicbox/artists.xml")//artists/artist/album
                                     where $a/name=""" + "'" + album_name + "'""""
                                     return $a/tracks/track/concat(xs:string(name/text()),':', xs:string(duration/text()))""")
@@ -289,8 +307,7 @@ def albuminfo(request):
     return render(request, 'albuminfo.html', {'tracks':tracks, 'tags':tags, 'wiki':wiki, 'photo':photo, 'artist':artist, 'album_name':album_name})
 
 def artist_page(request):
-    session.execute("open musicbox")
-
+    database()
     ###############################
     artist_name = request.GET['name']
     query1 = session.query(
@@ -340,7 +357,7 @@ def artist_page(request):
 
 def charts(request):
 
-    session.execute("open musicbox")
+    database()
 
     query1 = session.query("""(for $c in collection('musicbox/toptrack_portugal.xml')/lfm/tracks/track
                                 order by $c/listeners
