@@ -3,8 +3,8 @@
 {% block content %}
 
     <div class="row" style="margin-top: 40px;">
-        <div class="col-md-4">
-            <h3 style="text-align: center; font-weight: bold">{{ name }}</h3>
+        <div class="col-md-4" style="text-align: center">
+            <h3 style="font-weight: bold">{{ name }}</h3>
             <img src=" {{ image }}"/>
         </div>
         <div class="co-md-6" style="margin-top: 40px; text-align: justify;">
@@ -16,7 +16,7 @@
     <div class="row" style="margin-top: 40px">
         <h3 style="text-align: center; font-weight: bold; margin-bottom: 20px;">Top Albums</h3>
         {% for a in album%}
-        <div class="col-md-4">
+        <div class="col-md-4" style="text-align: center;">
             <a href='/album/details/?name={{ a.name }}'>
                 <img class="img-responsive img-thumbnail" src={{ a.imagem }}>
                 <h5>{{ a.name }}</h5>
@@ -28,7 +28,7 @@
     <div class="row" style="margin-top: 40px">
         <h3 style="text-align: center; font-weight: bold; margin-bottom: 20px;">All Albums</h3>
         {% for l in lista%}
-        <div class="col-md-4">
+        <div class="col-md-4" style="text-align: center;">
             <a href='/album/details/?name={{ l.name }}'>
                 <img class="img-responsive img-thumbnail" src={{ l.imagem }}>
                 <h5>{{ l.name }}</h5>
