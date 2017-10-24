@@ -255,12 +255,32 @@ def albums(request):
 
 def albuminfo(request):
     assert isinstance(request, HttpRequest)
+    database()
+
+    if request.POST:
+        if 'faveBtn' in request.POST:
+            name_album = request.POST['faveBtn']
+
+            query6 = session.query("""insert node <fav type="album">%s</fav>
+                                    into fn:doc("musicbox/Users.xml")//user[email="simoreira@ua.pt"]/starred""" % name_album)
+            query6.execute()
+            print(query6)
+        elif 'delBtn' in request.POST:
+            album_delete = request.POST['delBtn']
+
+            albumdel = session.query("""delete node fn:doc("musicbox/Users.xml")//user[email="simoreira@ua.pt"]/starred/fav[data("%s"   )]""" % album_delete)
+            albumdel.execute()
+
+            print(albumdel)
+        else:
+            pass
+
     tracks = []
     tmp = dict()
 
     album_name = request.GET['name']
 
-    database()
+
     query = session.query("""for $a in collection("musicbox/artists.xml")//artists/artist/album
                                     where $a/name=""" + "'" + album_name + "'""""
                                     return $a/tracks/track/concat(xs:string(name/text()),':', xs:string(duration/text()))""")
@@ -307,6 +327,27 @@ def albuminfo(request):
 
 def artist_page(request):
     database()
+
+    if request.POST:
+        if 'faveBtn' in request.POST:
+            name_artist = request.POST['faveBtn']
+
+            query6 = session.query("""insert node <fav type="artist">%s</fav>
+                                    into fn:doc("musicbox/Users.xml")//user[email="simoreira@ua.pt"]/starred""" % name_artist)
+            query6.execute()
+            print(query6)
+        elif 'delBtn' in request.POST:
+            artist_delete = request.POST['delBtn']
+
+            artistdel = session.query("""delete node fn:doc("musicbox/Users.xml")//user[email="simoreira@ua.pt"]/starred/fav[data("%s")]""" % artist_delete)
+            artistdel.execute()
+
+            print(artistdel)
+        else:
+            pass
+
+
+
     ###############################
     artist_name = request.GET['name']
     query1 = session.query(
@@ -397,3 +438,58 @@ def login(request):
 
 def register(request):
     return render(request, 'register.html')
+
+def profile(request):
+    if request.POST:
+        #query
+        print("POST FORM")
+
+    database()
+    #search users
+    query = session.query("""for $c in collection('musicbox/Users.xml')//users/user
+                                return
+                                    if ($c/@login="True") then
+                                        concat(xs:string($c/name), '_$?_', xs:string($c/email))
+                                    else
+                                        break""")
+
+    name = ""
+    email = ""
+    for p in query.iter():
+        name = p[1].split('_$?_')[0]
+        email = p[1].split('_$?_')[1]
+
+    print(profile)
+
+    query2 = session.query("""for $c in collection('musicbox/Users.xml')//users/user
+                                return
+                                if ($c/@login="True") then
+                                    xs:string($c/starred/fav[@type="artist"])
+                                else
+                                    break""")
+
+    artists = []
+    tmp1 = dict()
+
+    for d in query2.iter():
+        tmp1['artist'] = d[1]
+        artists.append(tmp1)
+        tmp1 = dict()
+
+    query3 = session.query("""for $c in collection('musicbox/Users.xml')//users/user
+                                return
+                                if ($c/@login="True") then
+                                    data($c/starred/fav[@type="album"])
+                                else   
+                                    break""")
+
+    albums = []
+    tmp2 = dict()
+
+    for d in query3.iter():
+        tmp2['album'] = d[1]
+        albums.append(tmp2)
+        tmp2 = dict()
+
+
+    return render(request, 'profile.html', {'name' : name, 'email': email, 'artists': artists, 'albums': albums})

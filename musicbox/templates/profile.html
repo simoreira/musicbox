@@ -1,0 +1,59 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-md-3"></div>
+        <div class="col-md-6">
+            <div class="w3-container" style="margin-top: 50px; height: 250px;">
+                <h3 style="text-align: center; font-weight: bold; margin-top: 30px; margin-bottom: 40px;";>Profile</h3>
+                <div class="list-group">
+                    <a class="list-group-item"> Name: {{ name }} </a>
+                    <a class="list-group-item"> E-mail: {{ email }} </a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3"></div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+         <h3 style="text-align: center; font-weight: bold; margin-top: 40px;";>Favorite Artists</h3>
+            <table class="table table-hover">
+                <tbody>
+                {% for at in artists %}
+                    <tr class='clickable-row' data-href='/artists/details/?name={{ at.artist }}'>
+                        <!--<td><img class=" img-thumbnail" style="margin-bottom: 1px;" src="{{ at.image }}"></td> -->
+                        <td><h5>{{ at.artist }}</h5></td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-6">
+            <h3 style="text-align: center; font-weight: bold; margin-top: 40px;";>Favorite Albums</h3>
+             <table class="table table-hover">
+                <tbody>
+                {% for ab in albums  %}
+                    <tr class='clickable-row' data-href='/album/details/?name={{ ab.album }}'>
+                        <!--<td><img class=" img-thumbnail" style="margin-bottom: 1px;" src="{{ ab.image }}"></td>-->
+                        <td><h5>{{ ab.album }}</h5></td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+{%  endblock %}
+
+{% block jspage %}
+    <script>
+        jQuery(document).ready(function($) {
+            $(".clickable-row").click(function() {
+                window.location = $(this).data("href");
+            });
+        });
+    </script>
+{% endblock %}

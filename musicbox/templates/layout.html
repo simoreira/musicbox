@@ -27,7 +27,7 @@
                         <li><a href="{% url 'artists' %}"><span class="glyphicon glyphicon glyphicon-user"></span>&nbsp;Artists</a></li>
                         <li><a href="{% url 'albums' %}"><span class="glyphicon glyphicon-book"></span>&nbsp; Albums</a></li>
                         <li><a href="{% url 'charts' %}"><span class="glyphicon glyphicon-star"></span>&nbsp; Charts</a></li>
-                        <li><a href="{% url 'login' %}"><span class="glyphicon glyphicon-log-in" ></span>&nbsp; Log in</a></li>
+                        <li><a href="{% url 'profile' %}"><span class="glyphicon glyphicon-log-in" ></span>&nbsp; Profile</a></li>
                 </ul>
                 <form class="navbar-form navbar-left" action="/search/"  role="search" method="POST">
                     {% csrf_token %}

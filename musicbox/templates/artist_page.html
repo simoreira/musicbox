@@ -6,6 +6,13 @@
         <div class="col-md-4" style="text-align: center">
             <h3 style="font-weight: bold">{{ name }}</h3>
             <img src=" {{ image }}"/>
+                <p>
+                <form role="fave" method="POST" action="/artists/details/?name={{ name }}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-default" value="{{ name }}" name="faveBtn">Fave</button>
+                    <button type="submit" class="btn btn-default" value="{{ name }}" name="delBtn">Delete</button>
+                </form>
+            </p>
         </div>
         <div class="co-md-6" style="margin-top: 40px; text-align: justify;">
             <h3 style="text-align: center; font-weight: bold">Biography</h3>
@@ -36,4 +43,14 @@
         </div>
         {% endfor %}
     </div>
+{% endblock %}
+
+{% block jspage %}
+     <script>
+       function change() {
+            var elem = document.getElementById("myButton1");
+            if (elem.value=="Fave me!") elem.value = "Added";
+            else elem.value = "Fave me!";
+        }
+    </script>
 {% endblock %}
