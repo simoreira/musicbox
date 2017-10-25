@@ -1,11 +1,11 @@
 <users>
-    <user login="False">
+    <user login="True">
         <name>Inês Moreira</name>
         <email>simoreira@ua.pt</email>
         <password>admin123</password>
         <starred>
-            <fav type="artist">Radiohead</fav>
-            <fav type="album">Paranoid Android</fav>
+            <fav type="artist" data="Radiohead">Radiohead</fav>
+            <fav type="album" data="Paranoid Android">Paranoid Android</fav>
         </starred>
     </user>
 </users>

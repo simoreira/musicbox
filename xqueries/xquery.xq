@@ -35,14 +35,14 @@ return <artist>{$x}</artist>, <album>{$y}</album>
   <name>Ana Cruz</name>
   <email>anacruz@ua.pt</email>
   <password>demo123</password>
-  <fav></fav>
+  <starred></starred>
   </user>
  after fn:doc("musicbox/Users.xml")//user :)
 
-(:insert node <fav type="album">A Girl Like Me</fav>
+(:insert node <fav type="album" data="A Girl Like Me"></fav>
 into fn:doc("musicbox/Users.xml")//user[email="simoreira@ua.pt"]/starred:)
 
-(:delete node fn:doc("musicbox/Users.xml")//user[email="simoreira@ua.pt"]/starred/fav[data("AM")]:)
+(:delete node fn:doc("musicbox/Users.xml")//user[email="simoreira@ua.pt"]/starred/fav[@data="A Girl Like Me")]:)
 
 
 

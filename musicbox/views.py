@@ -261,14 +261,14 @@ def albuminfo(request):
         if 'faveBtn' in request.POST:
             name_album = request.POST['faveBtn']
 
-            query6 = session.query("""insert node <fav type="album">%s</fav>
-                                    into fn:doc("musicbox/Users.xml")//user[email="simoreira@ua.pt"]/starred""" % name_album)
+            query6 = session.query("""insert node <fav data="%s" type="album">%s</fav>
+                                    into fn:doc("musicbox/Users.xml")//user[email="simoreira@ua.pt"]/starred""" % (name_album, name_album))
             query6.execute()
             print(query6)
         elif 'delBtn' in request.POST:
             album_delete = request.POST['delBtn']
 
-            albumdel = session.query("""delete node fn:doc("musicbox/Users.xml")//user[email="simoreira@ua.pt"]/starred/fav[data("%s"   )]""" % album_delete)
+            albumdel = session.query("""delete node fn:doc("musicbox/Users.xml")//user[email="simoreira@ua.pt"]/starred/fav[@data="%s"]""" % album_delete)
             albumdel.execute()
 
             print(albumdel)
@@ -282,7 +282,7 @@ def albuminfo(request):
 
 
     query = session.query("""for $a in collection("musicbox/artists.xml")//artists/artist/album
-                                    where $a/name=""" + "'" + album_name + "'""""
+                                     where $a/name=""" + "'" + album_name + "'""""
                                     return $a/tracks/track/concat(xs:string(name/text()),':', xs:string(duration/text()))""")
 
     for track in query.iter():
@@ -332,14 +332,14 @@ def artist_page(request):
         if 'faveBtn' in request.POST:
             name_artist = request.POST['faveBtn']
 
-            query6 = session.query("""insert node <fav type="artist">%s</fav>
-                                    into fn:doc("musicbox/Users.xml")//user[email="simoreira@ua.pt"]/starred""" % name_artist)
+            query6 = session.query("""insert node <fav data="%s" type="artist">%s</fav>
+                                    into fn:doc("musicbox/Users.xml")//user[email="simoreira@ua.pt"]/starred""" % (name_artist, name_artist))
             query6.execute()
             print(query6)
         elif 'delBtn' in request.POST:
             artist_delete = request.POST['delBtn']
 
-            artistdel = session.query("""delete node fn:doc("musicbox/Users.xml")//user[email="simoreira@ua.pt"]/starred/fav[data("%s")]""" % artist_delete)
+            artistdel = session.query("""delete node fn:doc("musicbox/Users.xml")//user[email="simoreira@ua.pt"]/starred/fav[@data="%s"]""" % artist_delete)
             artistdel.execute()
 
             print(artistdel)
