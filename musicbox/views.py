@@ -34,7 +34,7 @@ def parse_from_api(url, file_name):
         session.add("%s.xml" % file_name, content)
     else:
         print("%s.xml is an invalid XML file." % file_name)
-        sys.exit() 
+        sys.exit()
 
     os.remove("%s/%s.xml" % (os.path.dirname(os.path.abspath(__file__)), file_name))
 
@@ -117,23 +117,30 @@ def home(request):
 
     os.remove("%s/new_rss.xml" % os.path.dirname(os.path.abspath(__file__)))
 
-    query2 = session.query("""(for $b in collection('musicbox/artists.xml')//artists/artist
+
+    top_artist = session.query("""file:write("%s/result.xml", <root> {
+                                    (for $b in collection('musicbox/artists.xml')//artists/artist
                                      order by xs:integer($b/listeners) descending
-                                     return concat(xs:string($b/name/text()),'_$!_', xs:string($b/listeners), '_$!_', xs:string($b/image[@size='large']/text())))[position()=1 to 12]""")
+                                     return  <top> {$b/name, $b/listeners, $b/image[@size='large']}</top>)[position()=1 to 12]}</root>)""" % (os.path.dirname(
+os.path.abspath(__file__))))
+    top_artist.execute()
+    top_artist_tree = etree.parse('%s/result.xml' % os.path.dirname(os.path.abspath(__file__)))
+    top_artists_root = top_artist_tree.getroot()
+    top_artists_result = dict()
+    top_artists_list = []
 
-    list = []
-    top_artist = dict()
     count =0
-    for name in query2.iter():
-        top_artist['name'] = name[1].split('_$!_')[0]
-        top_artist['listeners'] = name[1].split('_$!_')[1]
-        top_artist['imagem'] = name[1].split('_$!_')[2]
-        count += 1
-        top_artist['count'] = count
-        list.append(top_artist)
-        top_artist = dict()
+    for elem in top_artists_root.iter('top'):
+        top_artists_result['name'] = elem.find('name').text
+        top_artists_result['image'] = elem.find('image').text
+        top_artists_result['listeners'] = elem.find('listeners').text
+        count +=1
+        top_artists_result['count'] = count
+        top_artists_list.append(top_artists_result)
+        top_artists_result = dict()
 
-    return render(request, 'index.html', {'artists': list, 'news': news_list})
+
+    return render(request, 'index.html', {'artists': top_artists_list, 'news': news_list})
 
 def search_query(request):
 
@@ -207,19 +214,26 @@ def artists(request):
         letter = request.GET.get('name')
 
     database()
-    query = session.query("""for $x in collection("musicbox/artists.xml")//artists/artist
+    artists = session.query("""file:write("%s/result.xml", <root>{
+                                     for $x in collection("musicbox/artists.xml")//artists/artist
                                       where starts-with($x/name, "%s")
                                       order by $x/name
-                                      return concat(xs:string($x/name/text()), '_$!_', xs:string($x/image[@size='large']/text()))""" % letter)
-    artists = []
-    tmp = dict()
-    for art in query.iter():
-        tmp['Name'] = art[1].split('_$!_')[0]
-        tmp['Imagem'] = art[1].split('_$!_')[1]
-        artists.append(tmp)
-        tmp = dict()
+                                      return <artists>{$x/name, $x/image[@size='large']}</artists>}</root>)""" % (os.path.dirname(
+ os.path.abspath(__file__)), letter))
+    artists.execute()
 
-    return render(request, 'artists.html', {'artists': artists, 'flist': flist})
+    artists_tree = etree.parse('%s/result.xml' % os.path.dirname(os.path.abspath(__file__)))
+    artists_root = artists_tree.getroot()
+    artists_result = dict()
+    artists_list = []
+
+    for elem in artists_root.iter('artists'):
+        artists_result['name'] = elem.find('name').text
+        artists_result['image'] = elem.find('image').text
+        artists_list.append(artists_result)
+        artists_result = dict()
+
+    return render(request, 'artists.html', {'artists': artists_list, 'flist': flist})
 
 def albums(request):
     assert isinstance(request, HttpRequest)
@@ -238,18 +252,26 @@ def albums(request):
         letter = request.GET.get('name')
 
     database()
-    query = session.query("""for $x in collection("musicbox/artists.xml")//artists/artist/album
+    albums = session.query("""file:write("%s/result.xml", <root>{
+                            for $x in collection("musicbox/artists.xml")//artists/artist/album
                                   where starts-with($x/name, "%s")
                                   order by $x/name
-                                  return concat(xs:string($x/name/text()), '_$!_', xs:string($x/image[@size='large']/text()))""" % letter)
-    albums = []
-    tmp = dict()
-    for album in query.iter():
-        tmp['Name'] = album[1].split('_$!_')[0]
-        tmp['Imagem'] = album[1].split('_$!_')[1]
-        albums.append(tmp)
-        tmp = dict()
-    return render(request, 'albums.html', {'albums': albums, 'flist': flist})
+                                  return <album>{$x/name, $x/image[@size='large']}</album>}</root>)""" % (os.path.dirname(
+ os.path.abspath(__file__)), letter))
+    albums.execute()
+
+    albums_tree = etree.parse('%s/result.xml' % os.path.dirname(os.path.abspath(__file__)))
+    albums_root = albums_tree.getroot()
+    albums_result = dict()
+    albums_list = []
+
+    for elem in albums_root.iter('album'):
+        albums_result['name'] = elem.find('name').text
+        albums_result['image'] = elem.find('image').text
+        albums_list.append(albums_result)
+        albums_result = dict()
+
+    return render(request, 'albums.html', {'albums': albums_list, 'flist': flist})
 
 def albuminfo(request):
     assert isinstance(request, HttpRequest)
@@ -270,55 +292,84 @@ def albuminfo(request):
         else:
             pass
 
-    tracks = []
-    tmp = dict()
-
     album_name = request.GET['name']
 
 
-    query = session.query("""for $a in collection("musicbox/artists.xml")//artists/artist/album
-                                     where $a/name="%s"
-                                    return $a/tracks/track/concat(xs:string(name/text()),':', xs:string(duration/text()))""" % album_name)
+    tracks = session.query("""file:write("%s/result.xml", <root>{
+                                for $a in collection("musicbox/artists.xml")//artists/artist/album[name="%s"]/tracks/track
+                                    return <tracks>{$a/name, $a/duration}</tracks>}</root>)""" % (os.path.dirname(
+        os.path.abspath(__file__)), album_name))
+    tracks.execute()
 
-    for track in query.iter():
-        tmp['name'] = track[1].split(':')[0]
-        tmp['duration'] = track[1].split(':')[1]
-        tracks.append(tmp)
-        tmp = dict()
+    tracks_tree = etree.parse('%s/result.xml' % os.path.dirname(os.path.abspath(__file__)))
+    tracks_root = tracks_tree.getroot()
+    tracks_result = dict()
+    tracks_list = []
 
-    query2 = session.query("""for $a in collection("musicbox/artists.xml")//artists/artist/album
+    for elem in tracks_root.iter('tracks'):
+        tracks_result['name'] = elem.find('name').text
+        tracks_result['duration'] = elem.find('duration').text
+        tracks_list.append(tracks_result)
+        tracks_result = dict()
+
+    tags = session.query("""file:write("%s/result2.xml", <root>{
+                                for $a in collection("musicbox/artists.xml")//artists/artist/album
                                 where $a/name="%s"
-                                return $a/tags/tag/name/text()""" % album_name)
+                                return <tag>{$a/tags/tag/name}</tag>}</root>)""" % (os.path.dirname(
+    os.path.abspath(__file__)), album_name))
 
-    tags = []
-    tags_dic = dict()
-    for tag in query2.iter():
-        tags_dic['tag'] = tag[1]
-        tags.append(tags_dic)
-        tags_dic = dict()
+    tags.execute()
+
+    tags_tree = etree.parse('%s/result2.xml' % os.path.dirname(os.path.abspath(__file__)))
+    tags_root = tags_tree.getroot()
+    tags_result = ""
+
+    for elem in tags_root.iter('tag'):
+        tags_result = elem.find('name').text
 
 
-    query3 = session.query("""for $a in collection("musicbox/artists.xml")//artists/artist/album
+    wiki = session.query("""file:write("%s/result3.xml", <root>{
+                                for $a in collection("musicbox/artists.xml")//artists/artist/album
                                 where $a/name="%s"
-                                return $a/wiki/summary/text()""" % album_name)
+                                return <wiki>{$a/wiki/summary}</wiki>}</root>)""" % (os.path.dirname(
+    os.path.abspath(__file__)), album_name))
 
-    wiki = ""
-    for w in query3.iter():
-        wiki = w[1]
+    wiki.execute()
+    wiki_tree = etree.parse('%s/result3.xml' % os.path.dirname(os.path.abspath(__file__)))
+    wiki_root = wiki_tree.getroot()
+    wiki_result = ""
 
-    query4 = session.query("""for $a in collection('musicbox/artists.xml')//artists/artist/album[name="%s"]/image[@size='extralarge']
-                            return $a/text()""" % album_name)
-    photo = ""
-    for p in query4.iter():
-        photo = p[1]
+    for elem in wiki_root.iter('wiki'):
+        wiki_result = elem.find('summary').text
 
-    query5 = session.query("""for $a in collection('musicbox/artists.xml')//artists/artist/album[name="%s"]
-                                return $a/artist/text()""" % album_name)
-    artist = ""
-    for n in query5.iter():
-        artist=n[1]
+    photo = session.query("""file:write("%s/result4.xml", <root>{
+                            for $a in collection('musicbox/artists.xml')//artists/artist/album[name="%s"]/image[@size='extralarge']
+                            return <photo>{$a}</photo>}</root>)""" % (os.path.dirname(
+os.path.abspath(__file__)), album_name))
 
-    return render(request, 'albuminfo.html', {'tracks':tracks, 'tags':tags, 'wiki':wiki, 'photo':photo, 'artist':artist, 'album_name':album_name})
+    photo.execute()
+    photo_tree = etree.parse('%s/result4.xml' % os.path.dirname(os.path.abspath(__file__)))
+    photo_root = photo_tree.getroot()
+    photo_result = ""
+
+    for elem in photo_root.iter('photo'):
+        photo_result = elem.find('image').text
+
+    artist = session.query("""file:write("%s/result5.xml", <root>{
+                                for $a in collection('musicbox/artists.xml')//artists/artist/album[name="%s"]
+                                return <artists>{$a/artist}</artists>}</root>)""" % (os.path.dirname(
+    os.path.abspath(__file__)), album_name))
+
+    artist.execute()
+    artist_tree = etree.parse('%s/result5.xml' % os.path.dirname(os.path.abspath(__file__)))
+    artist_root = artist_tree.getroot()
+    artist_result = ""
+
+    for elem in artist_root.iter('artists'):
+        artist_result = elem.find('artist').text
+
+
+    return render(request, 'albuminfo.html', {'tracks':tracks_list, 'tags':tags_result, 'wiki':wiki_result, 'photo':photo_result, 'artist':artist_result, 'album_name':album_name})
 
 def artist_page(request):
     database()
@@ -339,92 +390,131 @@ def artist_page(request):
         else:
             pass
 
-
-
-    ###############################
     artist_name = request.GET['name']
-    query1 = session.query(
-        """for $b in collection('musicbox/artists.xml')//artists/artist[name="%s"]/image[@size='extralarge'] return data($b/text())""" % artist_name)
 
-    image = ""
-    for img in query1.iter():
-        image = img[1]
+    image = session.query("""file:write("%s/result.xml", <root>{
+                                            for $b in collection('musicbox/artists.xml')//artists/artist[name="%s"]/image[@size='extralarge'] 
+                                            return $b}</root>)""" % (os.path.dirname(
+    os.path.abspath(__file__)), artist_name))
 
-    ################################
-    query2 = session.query("""for $c in collection('musicbox/artists.xml')//artist
-                                  where $c/name="%s"
-                                  return (data($c/bio/summary))""" % artist_name)
+    image.execute()
+    image_tree = etree.parse('%s/result.xml' % os.path.dirname(os.path.abspath(__file__)))
+    image_root = image_tree.getroot()
+    image_result = ""
 
-    bio = ""
-    for b in query2.iter():
-        bio = b[1]
+    for elem in image_root.iter('image'):
 
-    ################################
-    query3 = session.query("""(for $c in collection('musicbox/artists.xml')/lfm/artists//artist//album
+        image_result = elem.text
+
+
+    bio = session.query("""file:write("%s/result2.xml", <root>{
+                                    for $c in collection('musicbox/artists.xml')//artist[name="%s"]
+                                      return $c/bio/summary}</root>)""" % (os.path.dirname(
+    os.path.abspath(__file__)), artist_name))
+
+    bio.execute()
+    bio_tree = etree.parse('%s/result2.xml' % os.path.dirname(os.path.abspath(__file__)))
+    bio_root = bio_tree.getroot()
+    bio_result = ""
+
+    for elem in bio_root.iter('summary'):
+        bio_result = elem.text
+        print(bio_result)
+
+    top_albums = session.query("""file:write("%s/result3.xml", <root>{
+                            (for $c in collection('musicbox/artists.xml')/lfm/artists//artist//album
                                   where $c/artist="%s"
                                   order by $c/listeners
-                                  return concat(xs:string($c/name/text()),'_$?_',xs:string($c/image[@size='large']/text())))[position() = 1 to 3]""" % artist_name)
+                                  return <topAlbum>{$c/name, $c/image[@size='large']}</topAlbum>)[position() = 1 to 3]}</root>)""" % (os.path.dirname(
+    os.path.abspath(__file__)), artist_name))
 
-    album = []
-    tmp = dict()
-    for a in query3.iter():
-        tmp['name'] = a[1].split('_$?_')[0]
-        tmp['imagem'] = a[1].split('_$?_')[1]
-        album.append(tmp)
-        tmp = dict()
 
-    ################################
-    query4 = session.query("""for $c in collection('musicbox/artists.xml')//artists//artist//album
+    top_albums.execute()
+
+    top_albums_tree = etree.parse('%s/result3.xml' % os.path.dirname(os.path.abspath(__file__)))
+    top_albums_root = top_albums_tree.getroot()
+    top_albums_result = dict()
+    top_albums_list = []
+
+    for elem in top_albums_root.iter('topAlbum'):
+        top_albums_result['name'] = elem.find('name').text
+        top_albums_result['image'] = elem.find('image').text
+        top_albums_list.append(top_albums_result)
+        top_albums_result = dict()
+
+
+    all_albums = session.query("""file:write("%s/result4.xml", <root>{
+                                for $c in collection('musicbox/artists.xml')//artists//artist//album
                                   where $c/artist="%s"
-                                  return concat(xs:string($c/name/text()),'_$?_',xs:string($c/image[@size='large']/text()))""" % artist_name)
-    list2 = []
-    tmp2 = dict()
+                                  return <albums>{$c/name, $c/image[@size='large']}</albums>}</root>)""" % (os.path.dirname(
+    os.path.abspath(__file__)), artist_name))
 
-    for c in query4.iter():
-        tmp2['name'] = c[1].split('_$?_')[0]
-        tmp2['imagem'] = c[1].split('_$?_')[1]
-        list2.append(tmp2)
-        tmp2 = dict()
+    all_albums.execute()
 
-    return render(request, 'artist_page.html', {'image': image, 'bio': bio, 'album': album, 'lista': list2, 'name':artist_name})
+    all_albums_tree = etree.parse('%s/result4.xml' % os.path.dirname(os.path.abspath(__file__)))
+    all_albums_root = all_albums_tree.getroot()
+    all_albums_result = dict()
+    all_albums_list = []
+
+    for elem in all_albums_root.iter('albums'):
+        all_albums_result['name'] = elem.find('name').text
+        all_albums_result['image'] = elem.find('image').text
+        all_albums_list.append(all_albums_result)
+        all_albums_result = dict()
+
+    return render(request, 'artist_page.html', {'image': image_result, 'bio': bio_result, 'album': top_albums_list, 'lista': all_albums_list, 'name':artist_name})
 
 def charts(request):
 
     database()
 
-    query1 = session.query("""(for $c in collection('musicbox/toptrack_portugal.xml')/lfm/tracks/track
+    top_Portugal = session.query("""file:write("%s/result.xml", <root>{
+                            (for $c in collection('musicbox/toptrack_portugal.xml')/lfm/tracks/track
                                 order by $c/listeners
-                                return concat(xs:string($c/name/text()), '_$?_', xs:string($c/artist/name/text()), '_$?_', xs:string($c/image[@size='large']/text())))[position() = 1 to 10]""")
-    list1 = []
-    tmp = dict()
+                                return <topPortugal>{$c/name, <artist>{$c/artist/name/text()}</artist>, $c/image[@size='large']}</topPortugal>)[position() = 1 to 10]}</root>)""" % os.path.dirname(
+    os.path.abspath(__file__)))
+    top_Portugal.execute()
+
+    top_Portugal_tree = etree.parse('%s/result.xml' % os.path.dirname(os.path.abspath(__file__)))
+    top_Portugal_root = top_Portugal_tree.getroot()
+    top_Portugal_result = dict()
+    top_Portugal_list = []
     count = 0
-    for c in query1.iter():
-        count += 1
-        tmp['name'] = c[1].split('_$?_')[0]
-        tmp['artist'] = c[1].split('_$?_')[1]
-        tmp['image'] = c[1].split('_$?_')[2]
-        tmp['count'] = count
-        list1.append(tmp)
-        tmp = dict()
 
-    #########################
-    query2 = session.query("""(for $c in collection('musicbox/toptracks.xml')/lfm/tracks/track
+    for elem in top_Portugal_root.iter('topPortugal'):
+        count +=1
+        top_Portugal_result['name'] = elem.find('name').text
+        top_Portugal_result['artist'] = elem.find('artist').text
+        top_Portugal_result['image'] = elem.find('image').text
+        top_Portugal_result['count'] = count
+        top_Portugal_list.append(top_Portugal_result)
+        top_Portugal_result = dict()
+
+
+    top_World = session.query("""file:write("%s/result2.xml", <root>{
+                            (for $c in collection('musicbox/toptracks.xml')/lfm/tracks/track
                                 order by $c/listeners
-                                return concat(xs:string($c/name/text()), '_$?_', xs:string($c/artist/name/text()), '_$?_', xs:string($c/image[@size='large']/text())))[position() = 1 to 10]""")
+                                return <topWorld>{$c/name, <artist>{$c/artist/name/text()}</artist>, $c/image[@size='large']}</topWorld>)[position() = 1 to 10]}</root>)""" % os.path.dirname(
+    os.path.abspath(__file__)))
 
-    list2 = []
-    tmp2 = dict()
+    top_World.execute()
+
+    top_World_tree = etree.parse('%s/result2.xml' % os.path.dirname(os.path.abspath(__file__)))
+    top_World_root = top_World_tree.getroot()
+    top_World_result = dict()
+    top_World_list = []
     count2 = 0
-    for d in query2.iter():
-        count2 +=1
-        tmp2['name'] = d[1].split('_$?_')[0]
-        tmp2['artist'] = d[1].split('_$?_')[1]
-        tmp2['image'] = d[1].split('_$?_')[2]
-        tmp2['count'] = count2
-        list2.append(tmp2)
-        tmp2 = dict()
 
-    return render(request, 'charts.html', {'list1' : list1, 'list2' :list2})
+    for elem in top_World_root.iter('topWorld'):
+        count2 += 1
+        top_World_result['name'] = elem.find('name').text
+        top_World_result['artist'] = elem.find('artist').text
+        top_World_result['image'] = elem.find('image').text
+        top_World_result['count'] = count2
+        top_World_list.append(top_World_result)
+        top_World_result = dict()
+
+    return render(request, 'charts.html', {'topPortugal' : top_Portugal_list, 'topWorld' :top_World_list})
 
 def login(request):
     return render(request, 'logIn.html')
@@ -439,48 +529,72 @@ def profile(request):
 
     database()
     #search users
-    query = session.query("""for $c in collection('musicbox/Users.xml')//users/user
+    person = session.query("""file:write("%s/result.xml", <root>{
+                                for $c in collection('musicbox/Users.xml')//users/user
                                 return
                                     if ($c/@login="True") then
-                                        concat(xs:string($c/name), '_$?_', xs:string($c/email))
+                                        <person>{$c/name, $c/email}</person>
                                     else
-                                        break""")
+                                        break
+                                }</root>)""" % os.path.dirname( os.path.abspath(__file__)))
 
-    name = ""
-    email = ""
-    for p in query.iter():
-        name = p[1].split('_$?_')[0]
-        email = p[1].split('_$?_')[1]
+    person.execute()
+    person_tree = etree.parse('%s/result.xml' % os.path.dirname(os.path.abspath(__file__)))
+    person_root = person_tree.getroot()
+    person_name = ""
+    person_email = ""
 
-    query2 = session.query("""for $c in collection('musicbox/Users.xml')//users/user
+    for elem in person_root.iter('person'):
+        person_name = elem.find('name').text
+        person_email = elem.find('email').text
+
+    artist = session.query("""file:write("%s/result2.xml", <root>{
+                                for $c in collection('musicbox/Users.xml')//users/user
                                 return
                                 if ($c/@login="True") then
-                                    data($c/starred/fav[@type="artist"])
+                                    <artist>{$c/starred/fav[@type="artist"]}</artist>
                                 else
-                                    break""")
+                                    break
+                                }</root>)""" % os.path.dirname( os.path.abspath(__file__)))
 
-    artists = []
-    tmp1 = dict()
+    artist.execute()
+    artist_tree = etree.parse('%s/result2.xml' % os.path.dirname(os.path.abspath(__file__)))
+    artist_root = artist_tree.getroot()
+    artist_list = []
+    artist_result = dict()
 
-    for d in query2.iter():
-        tmp1['artist'] = d[1]
-        artists.append(tmp1)
-        tmp1 = dict()
+    for elem in artist_root.iter('artist'):
 
-    query3 = session.query("""for $c in collection('musicbox/Users.xml')//users/user
+        if elem.find('fav') == None:
+            pass
+        else:
+            artist_result['artist'] = elem.find('fav').text
+            artist_list.append(artist_result)
+            artist_result = dict()
+
+
+    album = session.query("""file:write("%s/result3.xml", <root>{
+                                for $c in collection('musicbox/Users.xml')//users/user
                                 return
                                 if ($c/@login="True") then
-                                    data($c/starred/fav[@type="album"])
-                                else   
-                                    break""")
+                                    <album>{$c/starred/fav[@type="album"]}</album>
+                                else
+                                    break
+                                }</root>)""" % os.path.dirname( os.path.abspath(__file__)))
 
-    albums = []
-    tmp2 = dict()
+    album.execute()
+    album_tree = etree.parse('%s/result3.xml' % os.path.dirname(os.path.abspath(__file__)))
+    album_root = album_tree.getroot()
+    album_list = []
+    album_result = dict()
 
-    for d in query3.iter():
-        tmp2['album'] = d[1]
-        albums.append(tmp2)
-        tmp2 = dict()
+    for elem in album_root.iter('album'):
+        if elem.find('fav') == None:
+            pass
+        else:
+            album_result['album'] = elem.find('fav').text
+            album_list.append(album_result)
+            album_result = dict()
 
 
-    return render(request, 'profile.html', {'name' : name, 'email': email, 'artists': artists, 'albums': albums})
+    return render(request, 'profile.html', {'name' : person_name, 'email': person_email, 'artists': artist_list, 'albums': album_list})

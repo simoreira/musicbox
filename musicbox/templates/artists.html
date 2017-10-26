@@ -15,9 +15,9 @@
 <div class="row" style="margin-top: 10px">
     {% for a in artists %}
     <div class="col-md-3">
-        <a href='/artists/details/?name={{ a.Name }}'>
-            <img class="img-responsive img-thumbnail" src="{{ a.Imagem }}">
-            <h5>{{ a.Name }}</h5>
+        <a href='/artists/details/?name={{ a.name }}'>
+            <img class="img-responsive img-thumbnail" src="{{ a.image }}">
+            <h5>{{ a.name }}</h5>
         </a>
     </div>
     {% endfor %}

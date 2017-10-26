@@ -9,7 +9,7 @@
 
             <table class="table table-hover">
                 <tbody>
-                {% for l in list1 %}
+                {% for l in topPortugal %}
                     <tr class='clickable-row' data-href='/artists/details/?name={{ l.artist }}'>
                         <td><img class=" img-thumbnail" style="margin-bottom: 1px;" src="{{ l.image }}"></td>
                         <td><h5>{{ l.count }}. {{ l.artist }}-{{ l.name }}</h5></td>
@@ -23,7 +23,7 @@
             <h3 style="text-align: center; font-weight: bold;">World Top 10 Tracks</h3>
             <table class="table table-hover">
                 <tbody>
-                {% for l in list2 %}
+                {% for l in topWorld %}
                     <tr class='clickable-row' data-href='/artists/details/?name={{ l.artist }}'>
                         <td><img class=" img-thumbnail" style="margin-bottom: 1px;" src="{{ l.image }}"></td>
                         <td><h5>{{ l.count }}. {{ l.artist }}-{{ l.name }}</h5></td>

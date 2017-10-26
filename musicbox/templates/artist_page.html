@@ -25,7 +25,7 @@
         {% for a in album%}
         <div class="col-md-4" style="text-align: center;">
             <a href='/album/details/?name={{ a.name }}'>
-                <img class="img-responsive img-thumbnail" src={{ a.imagem }}>
+                <img class="img-responsive img-thumbnail" src={{ a.image }}>
                 <h5>{{ a.name }}</h5>
             </a>
         </div>
@@ -37,7 +37,7 @@
         {% for l in lista%}
         <div class="col-md-4" style="text-align: center;">
             <a href='/album/details/?name={{ l.name }}'>
-                <img class="img-responsive img-thumbnail" src={{ l.imagem }}>
+                <img class="img-responsive img-thumbnail" src={{ l.image }}>
                 <h5>{{ l.name }}</h5>
             </a>
         </div>
