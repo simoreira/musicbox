@@ -183,7 +183,7 @@ def search_query(request):
     if not albums_list and not artists_list:
         return render(request, 'searchNFound.html')
     elif not albums_list and artists_list:
-        return render(request, 'search.html', {'artists':artists_list})
+        return render(request, 'search.html', {'artists': artists_list})
     elif not artists_list and albums_list:
         return render(request, 'search.html', {'albums': albums_list})
     else:
@@ -208,18 +208,16 @@ def artists(request):
 
     database()
     query = session.query("""for $x in collection("musicbox/artists.xml")//artists/artist
-                                      where starts-with($x/name, """ + "'" + letter + "')""""
+                                      where starts-with($x/name, "%s")
                                       order by $x/name
-                                      return concat(xs:string($x/name/text()), '_$!_', xs:string($x/image[@size='large']/text()))""")
+                                      return concat(xs:string($x/name/text()), '_$!_', xs:string($x/image[@size='large']/text()))""" % letter)
     artists = []
     tmp = dict()
     for art in query.iter():
-        print("oi")
         tmp['Name'] = art[1].split('_$!_')[0]
         tmp['Imagem'] = art[1].split('_$!_')[1]
         artists.append(tmp)
         tmp = dict()
-        print(art)
 
     return render(request, 'artists.html', {'artists': artists, 'flist': flist})
 
@@ -241,9 +239,9 @@ def albums(request):
 
     database()
     query = session.query("""for $x in collection("musicbox/artists.xml")//artists/artist/album
-                                  where starts-with($x/name, """ + "'" + letter + "')""""
+                                  where starts-with($x/name, "%s")
                                   order by $x/name
-                                  return concat(xs:string($x/name/text()), '_$!_', xs:string($x/image[@size='large']/text()))""")
+                                  return concat(xs:string($x/name/text()), '_$!_', xs:string($x/image[@size='large']/text()))""" % letter)
     albums = []
     tmp = dict()
     for album in query.iter():
@@ -264,14 +262,11 @@ def albuminfo(request):
             query6 = session.query("""insert node <fav data="%s" type="album">%s</fav>
                                     into fn:doc("musicbox/Users.xml")//user[email="simoreira@ua.pt"]/starred""" % (name_album, name_album))
             query6.execute()
-            print(query6)
         elif 'delBtn' in request.POST:
             album_delete = request.POST['delBtn']
 
             albumdel = session.query("""delete node fn:doc("musicbox/Users.xml")//user[email="simoreira@ua.pt"]/starred/fav[@data="%s"]""" % album_delete)
             albumdel.execute()
-
-            print(albumdel)
         else:
             pass
 
@@ -282,8 +277,8 @@ def albuminfo(request):
 
 
     query = session.query("""for $a in collection("musicbox/artists.xml")//artists/artist/album
-                                     where $a/name=""" + "'" + album_name + "'""""
-                                    return $a/tracks/track/concat(xs:string(name/text()),':', xs:string(duration/text()))""")
+                                     where $a/name="%s"
+                                    return $a/tracks/track/concat(xs:string(name/text()),':', xs:string(duration/text()))""" % album_name)
 
     for track in query.iter():
         tmp['name'] = track[1].split(':')[0]
@@ -292,8 +287,8 @@ def albuminfo(request):
         tmp = dict()
 
     query2 = session.query("""for $a in collection("musicbox/artists.xml")//artists/artist/album
-                                where $a/name=""" + "'" + album_name + "'""""
-                                return $a/tags/tag/name/text()""")
+                                where $a/name="%s"
+                                return $a/tags/tag/name/text()""" % album_name)
 
     tags = []
     tags_dic = dict()
@@ -304,21 +299,21 @@ def albuminfo(request):
 
 
     query3 = session.query("""for $a in collection("musicbox/artists.xml")//artists/artist/album
-                                where $a/name=""" + "'" + album_name + "'""""
-                                return $a/wiki/summary/text()""")
+                                where $a/name="%s"
+                                return $a/wiki/summary/text()""" % album_name)
 
     wiki = ""
     for w in query3.iter():
         wiki = w[1]
 
-    query4 = session.query("""for $a in collection('musicbox/artists.xml')//artists/artist/album[name=""" + "'" + album_name + "'""""]/image[@size='extralarge']
-                            return $a/text()""")
+    query4 = session.query("""for $a in collection('musicbox/artists.xml')//artists/artist/album[name="%s"]/image[@size='extralarge']
+                            return $a/text()""" % album_name)
     photo = ""
     for p in query4.iter():
         photo = p[1]
 
-    query5 = session.query("""for $a in collection('musicbox/artists.xml')//artists/artist/album[name=""" + "'" + album_name + "'""""]
-                                return $a/artist/text()""")
+    query5 = session.query("""for $a in collection('musicbox/artists.xml')//artists/artist/album[name="%s"]
+                                return $a/artist/text()""" % album_name)
     artist = ""
     for n in query5.iter():
         artist=n[1]
@@ -335,14 +330,12 @@ def artist_page(request):
             query6 = session.query("""insert node <fav data="%s" type="artist">%s</fav>
                                     into fn:doc("musicbox/Users.xml")//user[email="simoreira@ua.pt"]/starred""" % (name_artist, name_artist))
             query6.execute()
-            print(query6)
         elif 'delBtn' in request.POST:
             artist_delete = request.POST['delBtn']
 
             artistdel = session.query("""delete node fn:doc("musicbox/Users.xml")//user[email="simoreira@ua.pt"]/starred/fav[@data="%s"]""" % artist_delete)
             artistdel.execute()
 
-            print(artistdel)
         else:
             pass
 
@@ -351,7 +344,7 @@ def artist_page(request):
     ###############################
     artist_name = request.GET['name']
     query1 = session.query(
-        """for $b in collection('musicbox/artists.xml')//artists/artist[name=""" + "'" + artist_name + "'""""]/image[@size='extralarge'] return data($b/text())""")
+        """for $b in collection('musicbox/artists.xml')//artists/artist[name="%s"]/image[@size='extralarge'] return data($b/text())""" % artist_name)
 
     image = ""
     for img in query1.iter():
@@ -359,8 +352,8 @@ def artist_page(request):
 
     ################################
     query2 = session.query("""for $c in collection('musicbox/artists.xml')//artist
-                                  where $c/name=""" + "'" + artist_name + "'""""
-                                  return (data($c/bio/summary))""")
+                                  where $c/name="%s"
+                                  return (data($c/bio/summary))""" % artist_name)
 
     bio = ""
     for b in query2.iter():
@@ -368,9 +361,9 @@ def artist_page(request):
 
     ################################
     query3 = session.query("""(for $c in collection('musicbox/artists.xml')/lfm/artists//artist//album
-                                  where $c/artist=""" + "'" + artist_name + "'""""
+                                  where $c/artist="%s"
                                   order by $c/listeners
-                                  return concat(xs:string($c/name/text()),'_$?_',xs:string($c/image[@size='large']/text())))[position() = 1 to 3]""")
+                                  return concat(xs:string($c/name/text()),'_$?_',xs:string($c/image[@size='large']/text())))[position() = 1 to 3]""" % artist_name)
 
     album = []
     tmp = dict()
@@ -382,8 +375,8 @@ def artist_page(request):
 
     ################################
     query4 = session.query("""for $c in collection('musicbox/artists.xml')//artists//artist//album
-                                  where $c/artist=""" + "'" + artist_name + "'""""
-                                  return concat(xs:string($c/name/text()),'_$?_',xs:string($c/image[@size='large']/text()))""")
+                                  where $c/artist="%s"
+                                  return concat(xs:string($c/name/text()),'_$?_',xs:string($c/image[@size='large']/text()))""" % artist_name)
     list2 = []
     tmp2 = dict()
 
@@ -458,8 +451,6 @@ def profile(request):
     for p in query.iter():
         name = p[1].split('_$?_')[0]
         email = p[1].split('_$?_')[1]
-
-    print(profile)
 
     query2 = session.query("""for $c in collection('musicbox/Users.xml')//users/user
                                 return
