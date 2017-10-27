@@ -5,7 +5,7 @@
         <password>admin123</password>
         <starred>
             <fav type="artist" data="Radiohead">Radiohead</fav>
-            <fav type="album" data="Paranoid Android">Paranoid Android</fav>
+            <fav type="album" data="AM">AM</fav>
         </starred>
     </user>
 </users>

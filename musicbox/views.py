@@ -139,6 +139,7 @@ os.path.abspath(__file__))))
         top_artists_list.append(top_artists_result)
         top_artists_result = dict()
 
+    os.remove("%s/result.xml" % os.path.dirname(os.path.abspath(__file__)))
 
     return render(request, 'index.html', {'artists': top_artists_list, 'news': news_list})
 
@@ -233,6 +234,7 @@ def artists(request):
         artists_list.append(artists_result)
         artists_result = dict()
 
+    os.remove("%s/result.xml" % os.path.dirname(os.path.abspath(__file__)))
     return render(request, 'artists.html', {'artists': artists_list, 'flist': flist})
 
 def albums(request):
@@ -271,6 +273,7 @@ def albums(request):
         albums_list.append(albums_result)
         albums_result = dict()
 
+    os.remove("%s/result.xml" % os.path.dirname(os.path.abspath(__file__)))
     return render(request, 'albums.html', {'albums': albums_list, 'flist': flist})
 
 def albuminfo(request):
@@ -368,6 +371,11 @@ os.path.abspath(__file__)), album_name))
     for elem in artist_root.iter('artists'):
         artist_result = elem.find('artist').text
 
+    os.remove("%s/result.xml" % os.path.dirname(os.path.abspath(__file__)))
+    os.remove("%s/result2.xml" % os.path.dirname(os.path.abspath(__file__)))
+    os.remove("%s/result3.xml" % os.path.dirname(os.path.abspath(__file__)))
+    os.remove("%s/result4.xml" % os.path.dirname(os.path.abspath(__file__)))
+    os.remove("%s/result5.xml" % os.path.dirname(os.path.abspath(__file__)))
 
     return render(request, 'albuminfo.html', {'tracks':tracks_list, 'tags':tags_result, 'wiki':wiki_result, 'photo':photo_result, 'artist':artist_result, 'album_name':album_name})
 
@@ -419,7 +427,6 @@ def artist_page(request):
 
     for elem in bio_root.iter('summary'):
         bio_result = elem.text
-        print(bio_result)
 
     top_albums = session.query("""file:write("%s/result3.xml", <root>{
                             (for $c in collection('musicbox/artists.xml')/lfm/artists//artist//album
@@ -461,6 +468,11 @@ def artist_page(request):
         all_albums_result['image'] = elem.find('image').text
         all_albums_list.append(all_albums_result)
         all_albums_result = dict()
+
+    os.remove("%s/result.xml" % os.path.dirname(os.path.abspath(__file__)))
+    os.remove("%s/result2.xml" % os.path.dirname(os.path.abspath(__file__)))
+    os.remove("%s/result3.xml" % os.path.dirname(os.path.abspath(__file__)))
+    os.remove("%s/result4.xml" % os.path.dirname(os.path.abspath(__file__)))
 
     return render(request, 'artist_page.html', {'image': image_result, 'bio': bio_result, 'album': top_albums_list, 'lista': all_albums_list, 'name':artist_name})
 
@@ -514,6 +526,10 @@ def charts(request):
         top_World_list.append(top_World_result)
         top_World_result = dict()
 
+    os.remove("%s/result.xml" % os.path.dirname(os.path.abspath(__file__)))
+    os.remove("%s/result2.xml" % os.path.dirname(os.path.abspath(__file__)))
+
+
     return render(request, 'charts.html', {'topPortugal' : top_Portugal_list, 'topWorld' :top_World_list})
 
 def login(request):
@@ -562,15 +578,17 @@ def profile(request):
     artist_root = artist_tree.getroot()
     artist_list = []
     artist_result = dict()
+    tmp = []
 
     for elem in artist_root.iter('artist'):
-
         if elem.find('fav') == None:
             pass
         else:
-            artist_result['artist'] = elem.find('fav').text
-            artist_list.append(artist_result)
-            artist_result = dict()
+            tmp = elem.findall('fav')
+            for z in tmp:
+                artist_result['artist'] = z.get('data')
+                artist_list.append(artist_result)
+                artist_result = dict()
 
 
     album = session.query("""file:write("%s/result3.xml", <root>{
@@ -586,15 +604,22 @@ def profile(request):
     album_tree = etree.parse('%s/result3.xml' % os.path.dirname(os.path.abspath(__file__)))
     album_root = album_tree.getroot()
     album_list = []
+    tmp2 = []
     album_result = dict()
 
     for elem in album_root.iter('album'):
         if elem.find('fav') == None:
             pass
         else:
-            album_result['album'] = elem.find('fav').text
-            album_list.append(album_result)
-            album_result = dict()
+            tmp2 = elem.findall('fav')
+            for z in tmp2:
+                album_result['album'] = z.get('data')
+                album_list.append(album_result)
+                album_result = dict()
+
+    os.remove("%s/result.xml" % os.path.dirname(os.path.abspath(__file__)))
+    os.remove("%s/result2.xml" % os.path.dirname(os.path.abspath(__file__)))
+    os.remove("%s/result3.xml" % os.path.dirname(os.path.abspath(__file__)))
 
 
     return render(request, 'profile.html', {'name' : person_name, 'email': person_email, 'artists': artist_list, 'albums': album_list})
